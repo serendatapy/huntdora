@@ -1,0 +1,11 @@
+{
+  "name": "huntdora",
+  "version": "1.0.0",
+  "description": "Job Hunting App",
+  "main": "index.js",
+  "repository": "git@github.com:serendatapy/huntdora.git",
+  "author": "serendatapy <arvaldivia@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
