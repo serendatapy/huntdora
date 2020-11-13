@@ -4,16 +4,16 @@ export class Job {
   employerName!: string;
   jobTitle!: string;
   locationName!: string;
-  minimumSalary!: number;
-  maximumSalary!: number;
+  minimumSalary!: number | null;
+  maximumSalary!: number | null;
   currency!: string;
   expirationDate!: string;
   date!: string;
   jobDescription!: string;
   applications!: number;
 
-  static parse(data:any):Job {
-    const job:Job = Object.assign(new Job(),data);
+  static parse(data: any): Job {
+    const job: Job = Object.assign(new Job(), data);
     return job;
   }
 }

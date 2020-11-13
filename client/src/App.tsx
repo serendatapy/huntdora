@@ -16,9 +16,9 @@ function App() {
   useEffect(() => {
 
     const getData = async () => {
-      const {results} = await fetchJobs<JobList>('mockData.json')
+      const results = await fetchJobs<Job[]>('mockData.json')
       setJobsList(results);
-      console.log(results)
+      console.log("The new State is:",results)
     }
     getData();
     // return () => {

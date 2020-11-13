@@ -1,6 +1,6 @@
 import React from 'react';
-import JobCard from './JobCard';
-import {Job} from '../app-types';
+import { JobCard } from './JobCard';
+import { Job } from '../app-types';
 
 interface Props {
   jobs: Job[];
@@ -9,10 +9,12 @@ interface Props {
 export const JobPosts: React.FC<Props> = (props) => {
   // get info from app
   // for every job send info to jobcard
+  console.log("We've got: ",props)
   return (
     <div>
-      {props.jobs[0]?.jobTitle}
-      <JobCard />
+      {
+        props.jobs?.map(job => <JobCard job={job}/>)
+      }
     </div>
   )
 }
