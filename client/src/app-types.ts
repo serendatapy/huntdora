@@ -11,6 +11,15 @@ export class Job {
   date!: string;
   jobDescription!: string;
   applications!: number;
+
+  static parse(data:any):Job {
+    const job:Job = Object.assign(new Job(),data);
+    return job;
+  }
+}
+
+export interface JobList {
+  results: Job[];
 }
 
 export class JobDetail {

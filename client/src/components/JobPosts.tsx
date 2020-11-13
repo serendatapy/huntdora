@@ -1,10 +1,6 @@
 import React from 'react';
 import JobCard from './JobCard';
-
-interface Job {
-  id: string;
-  companyName: string;
-}
+import {Job} from '../app-types';
 
 interface Props {
   jobs: Job[];
@@ -15,7 +11,7 @@ export const JobPosts: React.FC<Props> = (props) => {
   // for every job send info to jobcard
   return (
     <div>
-      {props.jobs[0].companyName}
+      {props.jobs[0]?.jobTitle}
       <JobCard />
     </div>
   )
