@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { debounce } from 'underscore';
+// import { debounce } from 'underscore';
 
 interface Props {
   addQuery: (query: string) => void;
@@ -8,7 +8,7 @@ interface Props {
 
 export const Nav: React.FC<Props> = (props) => {
 
-  const [query, setquery] = useState('');
+  const [query, setQuery] = useState('');
 
 
   const handleSubmit = (e: any): void => {
@@ -17,11 +17,12 @@ export const Nav: React.FC<Props> = (props) => {
       console.log('Submited: ', query);
       props.addQuery(query);
     }
+    setQuery('');
   }
   // const debounceSubmit = debounce(handleSubmit, 5000);
 
   const handleChangeQuery = (e: any): void => {
-    setquery(e.target.value);
+    setQuery(e.target.value);
     console.log(query);
     // debounceSubmit(e)
   }
@@ -37,8 +38,9 @@ export const Nav: React.FC<Props> = (props) => {
           value={query}
           type="text"
           onChange={handleChangeQuery}
-          placeholder="Enter your UK job search here"
+          placeholder="Search for a job in the uk..."
         ></input>
+        <button onClick={handleSubmit}>Search</button>
       </form>
     </div>
   )
