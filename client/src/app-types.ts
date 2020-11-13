@@ -16,6 +16,14 @@ export class Job {
     const job: Job = Object.assign(new Job(), data);
     return job;
   }
+
+  static calculateSalaryFreq(minSalary: number | null, maxSalary: number | null): string {
+
+    if (maxSalary === null) return 'Negotiable'
+    else if (maxSalary > 1000) return `${minSalary}-${maxSalary} per annum`
+    else if (maxSalary > 100) return `${minSalary}-${maxSalary} per day`
+    else return `${minSalary}-${maxSalary} per hour`
+  }
 }
 
 export interface JobList {

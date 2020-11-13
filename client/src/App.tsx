@@ -1,10 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import './App.css';
-import Nav from './components/Nav'
+import {Nav} from './components/Nav'
 import { JobPosts } from './components/JobPosts'
 import { fetchJobs } from './apiService';
-import { Job, JobList } from './app-types';
+import { Job } from './app-types';
 //need a use effect to fetch data
 
 function App() {
@@ -12,25 +12,30 @@ function App() {
   const initialState:Job[] = [];
 
   const [jobsList, setJobsList] = useState<Job[]>(initialState);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
-
+    console.log('executing useEffect:',searchQuery);
     const getData = async () => {
-      const results = await fetchJobs<Job[]>('mockData.json')
+      const results = await fetchJobs<Job[]>(`/search?keywords=${searchQuery}&location=london&distanceFromLocation=20`)
       setJobsList(results);
       console.log("The new State is:",results)
     }
-    getData();
+    if(searchQuery !== '') getData();
     // return () => {
     //   cleanup
     // }
-  }, []);
+  }, [searchQuery]);
+
+  function addQuery(query:string) {
+    setSearchQuery(query);
+  }
 
 
 
   return (
     <div className="">
-      <Nav />
+      <Nav addQuery={addQuery} />
       <JobPosts jobs={jobsList} />
     </div>
   );
