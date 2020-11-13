@@ -3,3 +3,13 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.card {
+  box-shadow: 0 0 15px 2px #3333;
+  border-radius: 5px;
+  margin: 20px 50px;
+  font-size: 1rem;
+  display: flex;
+  padding: 10px;
+  cursor: pointer;
+}

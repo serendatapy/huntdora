@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import './App.css';
-import {Nav} from './components/Nav'
+import { Nav } from './components/Nav'
 import { JobPosts } from './components/JobPosts'
 import { fetchJobs } from './apiService';
 import { Job } from './app-types';
@@ -9,26 +9,30 @@ import { Job } from './app-types';
 
 function App() {
 
-  const initialState:Job[] = [];
+  const initialState: Job[] = [];
 
   const [jobsList, setJobsList] = useState<Job[]>(initialState);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
-    console.log('executing useEffect:',searchQuery);
+    console.log('executing useEffect:', searchQuery);
     const getData = async () => {
       const results = await fetchJobs<Job[]>(`/search?keywords=${searchQuery}&location=london&distanceFromLocation=20`)
       setJobsList(results);
-      console.log("The new State is:",results)
+      console.log("The new State is:", results)
     }
-    if(searchQuery !== '') getData();
+    if (searchQuery !== '') getData();
     // return () => {
     //   cleanup
     // }
   }, [searchQuery]);
 
-  function addQuery(query:string) {
+  function addQuery(query: string) {
     setSearchQuery(query);
+  }
+
+  function getJob(jobId: number) {
+    setSearchQuery(`${jobId}`) //correctly returns job id
   }
 
 
@@ -36,7 +40,7 @@ function App() {
   return (
     <div className="">
       <Nav addQuery={addQuery} />
-      <JobPosts jobs={jobsList} />
+      <JobPosts jobs={jobsList} getJob={getJob} />
     </div>
   );
 }

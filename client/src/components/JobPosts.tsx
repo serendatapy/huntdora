@@ -4,6 +4,7 @@ import { Job } from '../app-types';
 
 interface Props {
   jobs: Job[];
+  getJob: (jobId:number) => void;
 }
 
 export const JobPosts: React.FC<Props> = (props) => {
@@ -13,7 +14,7 @@ export const JobPosts: React.FC<Props> = (props) => {
   return (
     <div>
       {
-        props.jobs?.map(job => <JobCard job={job}/>)
+        props.jobs?.map(job => <JobCard job={job} getJob={props.getJob}/>)
       }
     </div>
   )
