@@ -18,7 +18,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [jobDetails, setjobDetails] = useState(Job.parse({}));
-  const [savedJobs, setSavedJobs] = useState<Job[]>([])
+  const [savedJobs, setSavedJobs] = useState<Job[]|[]>([]);
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
@@ -40,7 +40,10 @@ function App() {
    */
   useEffect(() => {
     const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON))
+    if (sJobsJSON != null) {
+      console.log('loading jobs')
+      setSavedJobs(JSON.parse(sJobsJSON))
+    }
     return () => {/*cleanup*/ }
   }, [])
   /**
@@ -53,7 +56,16 @@ function App() {
   }, [savedJobs])
 
   function saveJob(job:Job) {
-    let newSavedJobs = [...savedJobs,job]
+    const jobExists: Job | undefined = savedJobs.find(sJob => sJob.jobId === job.jobId);
+    if(!jobExists){
+      let newSavedJobs:any = savedJobs.slice();
+      newSavedJobs.push(job);
+      setSavedJobs(newSavedJobs);
+    }
+  }
+
+  function removeJob(job:Job) {
+    let newSavedJobs:any = savedJobs.filter(sJob => sJob.jobId !== job.jobId);
     setSavedJobs(newSavedJobs);
   }
 
@@ -70,7 +82,7 @@ function App() {
   }
 
   function changeDisplay() {
-    return viewDetail ? (<JobDetails job={jobDetails} saveJob={saveJob}/>) : (<JobPosts jobs={jobsList} getJob={getJob} />)
+    return viewDetail ? (<JobDetails job={jobDetails} saveJob={saveJob} removeJob={removeJob}/>) : (<JobPosts jobs={jobsList} getJob={getJob} />)
   }
 
 
