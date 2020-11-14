@@ -12,7 +12,7 @@ export const JobPosts: React.FC<Props> = (props) => {
   console.log("We've got: ", props)
   return (
     <div>
-      {props.jobs?.map(job => <JobCard job={job} getJob={props.getJob} />)}
+      {props.jobs?.map(job => <JobCard key={job.jobId} job={job} getJob={props.getJob} />)}
     </div>
   )
 }

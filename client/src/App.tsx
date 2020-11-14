@@ -4,7 +4,7 @@ import './App.css';
 import { Nav } from './components/Nav'
 import { JobPosts } from './components/JobPosts'
 import { fetchJobs } from './apiService';
-import { Job, JobDetail } from './app-types';
+import { Job } from './app-types';
 import { JobDetails } from './components/JobDetails';
 //need a use effect to fetch data
 
@@ -12,61 +12,45 @@ const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
-  //const initJobsList: Job[] = [];
-
-  const [jobsList, setJobsList] = useState<Job[]|[]>([]);
+  const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [jobDetails, setjobDetails] = useState(Job.parse({}));
-  const [savedJobs, setSavedJobs] = useState<Job[]|[]>([]);
+  const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
     const getData = async () => {
       const results = await fetchJobs<any>(searchQuery)
-
       if (viewDetail) setjobDetails(results)
       else setJobsList(results);
       console.log("The new State is:", viewDetail, results, jobsList, jobDetails)
     }
     if (searchQuery !== '') getData();
-    // return () => {
-    //   cleanup
-    // }
-  }, [searchQuery]);
+  }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   *Load recipes on startup
+   *Load jobs on startup
    */
   useEffect(() => {
     const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (sJobsJSON != null) {
-      console.log('loading jobs')
-      setSavedJobs(JSON.parse(sJobsJSON))
-    }
-    return () => {/*cleanup*/ }
+    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON))
   }, [])
   /**
-   *update recipes on change
+   *update jobs on change
    */
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
-    console.log('Saved to local storage',savedJobs);
-    return () => {/*cleanup*/}
   }, [savedJobs])
 
-  function saveJob(job:Job) {
+  function saveJob(job: Job) {
     const jobExists: Job | undefined = savedJobs.find(sJob => sJob.jobId === job.jobId);
-    if(!jobExists){
-      let newSavedJobs:any = savedJobs.slice();
-      newSavedJobs.push(job);
-      setSavedJobs(newSavedJobs);
-    }
+    if (!jobExists) setSavedJobs([...savedJobs, job]);
   }
 
-  function removeJob(job:Job) {
-    let newSavedJobs:any = savedJobs.filter(sJob => sJob.jobId !== job.jobId);
-    if(newSavedJobs.length !== savedJobs.length) setSavedJobs(newSavedJobs);
+  function removeJob(job: Job) {
+    let newSavedJobs: Job[] | [] = savedJobs.filter(sJob => sJob.jobId !== job.jobId);
+    if (newSavedJobs.length !== savedJobs.length) setSavedJobs(newSavedJobs);
   }
 
   function addQuery(query: string) {
@@ -82,10 +66,8 @@ function App() {
   }
 
   function changeDisplay() {
-    return viewDetail ? (<JobDetails job={jobDetails} saveJob={saveJob} removeJob={removeJob}/>) : (<JobPosts jobs={jobsList} getJob={getJob} />)
+    return viewDetail ? (<JobDetails job={jobDetails} saveJob={saveJob} removeJob={removeJob} />) : (<JobPosts jobs={jobsList} getJob={getJob} />)
   }
-
-
 
   return (
     <div className="">
