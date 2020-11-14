@@ -4,23 +4,31 @@ import parse from 'html-react-parser'
 
 interface Props {
   job: Job;
+  saveJob: (job: Job) => void;
 }
 
-function handleClickSave() {
-  //save job to local store
-}
+export const JobDetails: React.FC<Props> = ({ job, saveJob }) => {
 
-function handleClickRemove() {
-  //save job to local store
-}
+  function handleClickSave(job: Job) {
+    console.log('HandleClick activated')
+    //saveJob(job);
+  }
 
-export const JobDetails: React.FC<Props> = ({ job }) => {
+  function handleClickRemove() {
+    //save job to local store
+  }
+
+  function parseJobDesc() {
+    if(job.jobDescription) return parse(job.jobDescription)
+  }
+
+
   return (
     <div>
-      <button onClick={handleClickSave}>Save</button>
+      <button onClick={() => handleClickSave(job)}>Save</button>
       <button onClick={handleClickRemove}>Remove</button>
       {job?.jobTitle}
-      {parse(job.jobDescription)}
+      {parseJobDesc()}
     </div>
   )
 }

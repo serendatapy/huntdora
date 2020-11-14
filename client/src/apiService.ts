@@ -16,19 +16,3 @@ export async function fetchJobs<JobList>(
   console.log("They've been transformed!",jobs)
   return jobs;
 }
-
-
-//fetch job listings
-
-
-
-    // function fetchJobs(): Job[] {
-
-    //   const mockJobList = mockdata.results.map(job => Job.parse(job));
-
-    //   return mockJobList;
-    // }
-
-    // .then((data:JobList) => {
-    //   mockJobList = data.map((job:any) => Job.parse(job));
-    // })
