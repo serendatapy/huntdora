@@ -25,6 +25,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
   }
 
   const displaySaveRemoveBtn = (): JSX.Element => {
+    console.log('This job is saved:',job.saved);
     return job.saved === true ?
       (<button onClick={() => handleClickRemove(job)}>Remove</button>) :
       (<button onClick={() => handleClickSave(job)}>Save</button>)
