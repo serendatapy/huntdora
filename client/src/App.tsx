@@ -6,7 +6,6 @@ import { JobPosts } from './components/JobPosts'
 import { fetchJobs } from './apiService';
 import { Job } from './app-types';
 import { JobDetails } from './components/JobDetails';
-//need a use effect to fetch data
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
@@ -62,7 +61,7 @@ function App() {
   function getJob(jobId: number) {
     const newPath = `jobs/${jobId}`
     setViewDetail(true)
-    setSearchQuery(newPath) //correctly returns job id
+    setSearchQuery(newPath)
   }
 
   function changeDisplay() {

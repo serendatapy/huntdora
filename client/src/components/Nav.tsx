@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState } from 'react';
-// import { debounce } from 'underscore';
 
 interface Props {
   addQuery: (query: string) => void;
@@ -19,12 +18,10 @@ export const Nav: React.FC<Props> = (props) => {
     }
     setQuery('');
   }
-  // const debounceSubmit = debounce(handleSubmit, 5000);
 
   const handleChangeQuery = (e: any): void => {
     setQuery(e.target.value);
     console.log(query);
-    // debounceSubmit(e)
   }
 
 
