@@ -14,7 +14,7 @@ export const Nav: React.FC<Props> = (props) => {
   const [query, setQuery] = useState('');
 
 
-  const handleSubmit = (e: any): void => {
+  const handleSubmit = (e: { preventDefault: () => void; }): void => {
     e.preventDefault();
     console.log('Submission: ', query);
     if (query !== "") {
@@ -25,17 +25,16 @@ export const Nav: React.FC<Props> = (props) => {
     }
   }
 
-  const handleChangeQuery = (e: any): void => {
-    console.log('Handle Change activated')
+  const handleChangeQuery = (e: { target: { value: React.SetStateAction<string>; }; }): void => {
     setQuery(e.target.value);
     console.log(query);
   }
 
-  const handleSavedPosts = (e: any): void => {
+  const handleSavedPosts = (): void => {
     history.push('/saved-jobs')
   }
 
-  const handleBackToSearch = (e: any): void => {
+  const handleBackToSearch = (): void => {
     history.push('/job-search')
   }
 

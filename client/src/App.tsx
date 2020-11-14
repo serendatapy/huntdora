@@ -15,14 +15,14 @@ function App() {
   const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewDetail, setViewDetail] = useState<boolean>(false);
-  const [jobDetails, setjobDetails] = useState(Job.parse({}));
+  const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
     const getData = async () => {
-      const results = await fetchJobs<any>(searchQuery)
-      if (viewDetail) setjobDetails(results)
+      const results = await fetchJobs<any>(searchQuery);
+      if (viewDetail) setjobDetails(results);
       else setJobsList(results);
       console.log("The new State is:", viewDetail, results, jobsList, jobDetails)
     }
@@ -33,8 +33,8 @@ function App() {
    *Load jobs on startup
    */
   useEffect(() => {
-    const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY)
-    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON))
+    const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
   }, [])
   /**
    *update jobs on change
@@ -54,15 +54,15 @@ function App() {
   }
 
   function addQuery(query: string) {
-    const newPath = `/search?keywords=${query}&location=london&distanceFromLocation=20`
-    setViewDetail(false)
+    const newPath = `/search?keywords=${query}&location=london&distanceFromLocation=20`;
+    setViewDetail(false);
     setSearchQuery(newPath);
   }
 
   function getJob(jobId: number) {
-    const newPath = `jobs/${jobId}`
-    setViewDetail(true)
-    setSearchQuery(newPath)
+    const newPath = `jobs/${jobId}`;
+    setViewDetail(true);
+    setSearchQuery(newPath);
   }
 
   return (

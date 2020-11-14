@@ -13,7 +13,7 @@ export class Job {
   applications!: number;
   saved:boolean = false;
 
-  static parse(data: any): Job {
+  static parse(data: {}): Job {
     const job: Job = Object.assign(new Job(), data);
     return job;
   }
