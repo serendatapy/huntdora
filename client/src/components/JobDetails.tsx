@@ -15,7 +15,6 @@ export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
   }
 
   function handleClickRemove(job: Job) {
-    console.log('HandleClick activated')
     removeJob(job);
   }
 

@@ -12,9 +12,9 @@ const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
-  const initJobsList: Job[] = [];
+  //const initJobsList: Job[] = [];
 
-  const [jobsList, setJobsList] = useState<Job[]>(initJobsList);
+  const [jobsList, setJobsList] = useState<Job[]|[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [jobDetails, setjobDetails] = useState(Job.parse({}));
@@ -66,7 +66,7 @@ function App() {
 
   function removeJob(job:Job) {
     let newSavedJobs:any = savedJobs.filter(sJob => sJob.jobId !== job.jobId);
-    setSavedJobs(newSavedJobs);
+    if(newSavedJobs.length !== savedJobs.length) setSavedJobs(newSavedJobs);
   }
 
   function addQuery(query: string) {
