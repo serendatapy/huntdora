@@ -4,22 +4,27 @@ import './App.css';
 import { Nav } from './components/Nav'
 import { JobPosts } from './components/JobPosts'
 import { fetchJobs } from './apiService';
-import { Job } from './app-types';
+import { Job, JobDetail } from './app-types';
+import { JobDetails } from './components/JobDetails';
 //need a use effect to fetch data
 
 function App() {
 
-  const initialState: Job[] = [];
+  const initJobsList: Job[] = [];
 
-  const [jobsList, setJobsList] = useState<Job[]>(initialState);
+  const [jobsList, setJobsList] = useState<Job[]>(initJobsList);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [viewDetail, setViewDetail] = useState<boolean>(false);
+  const [jobDetails, setjobDetails] = useState(Job.parse({}));
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
     const getData = async () => {
-      const results = await fetchJobs<Job[]>(`/search?keywords=${searchQuery}&location=london&distanceFromLocation=20`)
-      setJobsList(results);
-      console.log("The new State is:", results)
+      const results = await fetchJobs<any>(searchQuery)
+
+      if(viewDetail) setjobDetails(results)
+      else setJobsList(results);
+      console.log("The new State is:",viewDetail, results,jobsList,jobDetails)
     }
     if (searchQuery !== '') getData();
     // return () => {
@@ -28,11 +33,19 @@ function App() {
   }, [searchQuery]);
 
   function addQuery(query: string) {
-    setSearchQuery(query);
+    const newPath = `/search?keywords=${query}&location=london&distanceFromLocation=20`
+    setViewDetail(false)
+    setSearchQuery(newPath);
   }
 
   function getJob(jobId: number) {
-    setSearchQuery(`${jobId}`) //correctly returns job id
+    const newPath = `jobs/${jobId}`
+    setViewDetail(true)
+    setSearchQuery(newPath) //correctly returns job id
+  }
+
+  function changeDisplay() {
+    return viewDetail? (<JobDetails job={jobDetails}/>) : (<JobPosts jobs={jobsList} getJob={getJob} />)
   }
 
 
@@ -40,7 +53,7 @@ function App() {
   return (
     <div className="">
       <Nav addQuery={addQuery} />
-      <JobPosts jobs={jobsList} getJob={getJob} />
+      {changeDisplay()}
     </div>
   );
 }

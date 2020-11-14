@@ -7,7 +7,12 @@ export async function fetchJobs<JobList>(
 ): Promise<JobList> {
   const { data } = await reedAPI.get(path);
   console.log("Fetched",data)
-  const jobs = data.results.map((job:any) => Job.parse(job))
+  let jobs;
+  if(data.results){
+     jobs = data.results.map((job:any) => Job.parse(job))
+  } else {
+     jobs = Job.parse(data);
+  }
   console.log("They've been transformed!",jobs)
   return jobs;
 }

@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/underscore": "^1.10.24",
     "axios": "^0.21.0",
+    "html-react-parser": "^0.14.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
