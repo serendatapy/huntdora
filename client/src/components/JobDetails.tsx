@@ -16,6 +16,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
   }
 
   function handleClickRemove(job: Job) {
+    job.saved = false;
     removeJob(job);
   }
 
