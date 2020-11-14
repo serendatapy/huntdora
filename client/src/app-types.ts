@@ -11,6 +11,7 @@ export class Job {
   date!: string;
   jobDescription!: string;
   applications!: number;
+  saved:boolean = false;
 
   static parse(data: any): Job {
     const job: Job = Object.assign(new Job(), data);

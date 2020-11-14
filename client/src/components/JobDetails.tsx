@@ -1,6 +1,6 @@
 import React from 'react';
 import { Job } from '../app-types';
-import parse from 'html-react-parser'
+import parse from 'html-react-parser';
 
 interface Props {
   job: Job;
@@ -11,6 +11,7 @@ interface Props {
 export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
 
   function handleClickSave(job: Job) {
+    job.saved = true;
     saveJob(job);
   }
 
@@ -19,14 +20,19 @@ export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
   }
 
   function parseJobDesc() {
-    if(job.jobDescription) return parse(job.jobDescription)
+    if (job.jobDescription) return parse(job.jobDescription)
+  }
+
+  const displaySaveRemoveBtn = (): JSX.Element => {
+    return job.saved === true ?
+      (<button onClick={() => handleClickRemove(job)}>Remove</button>) :
+      (<button onClick={() => handleClickSave(job)}>Save</button>)
   }
 
 
   return (
     <div>
-      <button onClick={() => handleClickSave(job)}>Save</button>
-      <button onClick={() => handleClickRemove(job)}>Remove</button>
+      {displaySaveRemoveBtn()}
       {job?.jobTitle}
       {parseJobDesc()}
     </div>
