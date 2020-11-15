@@ -6,6 +6,7 @@ import { Job } from './app-types';
 import { Nav } from './components/Nav'
 import { JobPosts } from './components/JobPosts'
 import { JobDetails } from './components/JobDetails';
+import { Loading } from './components/Loading';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
@@ -16,16 +17,21 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
     if (searchQuery !== '') {
-       const fetchJobs = async()=> {
-         console.log('Sending query',searchQuery)
-        const results:any = await getData(null,searchQuery);
-        setJobsList(results)
-       }
-       fetchJobs();
+      const fetchJobs = async () => {
+        console.log('Sending query', searchQuery)
+        const results: any = await getData(null, searchQuery);
+        results.forEach((job: Job) => {
+          if(jobExists(job.jobId, savedJobs)) job.saved = !job.saved
+        })
+        setJobsList(results);
+        setloading(false);
+      }
+      fetchJobs();
     }
 
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
@@ -45,36 +51,54 @@ function App() {
   }, [savedJobs])
 
   async function saveJob(job: Job) {
-    const jobExists: Job | undefined = savedJobs.find(sJob => sJob.jobId === job.jobId);
-    if (!jobExists) {
-      const newJob:Job = await getData(job.jobId,null);
+    if (!jobExists(job.jobId, savedJobs)) {
+      const newJob: Job = await getData(job.jobId, null);
       newJob.saved = true;
       setSavedJobs(savedJobs => [...savedJobs, newJob]);
     }
   }
-
-  function removeJob(job: Job) {
-      setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
-      const jobToUpdate: Job|undefined = jobsList.find(listJob => listJob.jobId === job.jobId);
-      if (jobToUpdate) jobToUpdate.saved = false;
-      setJobsList([...jobsList]);
+  function saveJobFromDetails(job: Job) {
+    if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
+    updateJobInList(job.jobId);
   }
 
-  function addQuery(query: string) {
-    setSearchQuery(query);
+  function removeJob(job: Job) {
+    setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
+    updateJobInList(job.jobId);
+  }
+
+  function jobExists(jobId: number, list: any[]): Job | undefined {
+    return list.find(listJob => listJob.jobId === jobId);
+  }
+
+  function updateJobInList(jobId: number) {
+    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
+    if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
+    setJobsList([...jobsList]);
+  }
+
+  function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
+    let { query, locationName, distanceFrom, minimumSalary } = data;
+    const locationQuery = locationName === '' ? '' : `&locationName=${locationName}`;
+    const distanceQuery = distanceFrom === '' ? '' : `&distanceFromLocation=${distanceFrom}`;
+    const salaryQuery = minimumSalary === '' ? '' : `&minimumSalary=${minimumSalary}`;
+    setloading(true);
+    setSearchQuery(query + locationQuery + distanceQuery + salaryQuery);
   }
 
   async function getJob(jobId: number) {
     console.log('Checking if is saved...')
-    const jobCached = savedJobs.find(job => job.jobId === jobId);
-    if(jobCached) {
+    const jobCached = jobExists(jobId, savedJobs);
+    if (jobCached) {
       setjobDetails(jobCached)
-      console.log('Fetched Existing',jobCached)
+      console.log('Fetched Existing', jobCached)
     }
     else {
+      setloading(true);
       console.log('Fetching new job details');
-      const newJob:Job= await getData(jobId,null)
+      const newJob: Job = await getData(jobId, null)
       setjobDetails(newJob)
+      setloading(false);
     }
   }
 
@@ -83,20 +107,15 @@ function App() {
       <div className="">
         <Nav addQuery={addQuery} />
         <Switch>
-        <Route path='/job-search' key="fetched-jobs" exact render={()=> (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob}/>)}/>
-        <Route path='/job-details' exact render={()=> (<JobDetails job={jobDetails} saveJob={saveJob} removeJob={removeJob}/>)}/>
-        <Route path='/saved-jobs' exact render={()=> (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob}/>)}/>
+          <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+          <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
         </Switch>
       </div>
 
     </Router>
   );
 }
-
-/**
- * The remove button changes, but effectively the state of saved, removed elements is not changing. Check Callbacks are working properly
- * In job detail, job is added correctly, but when remove is pressed it doesn't work(doesn't refresh component)
- */
 
 export default App;
 

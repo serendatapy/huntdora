@@ -4,15 +4,15 @@ import parse from 'html-react-parser';
 
 interface Props {
   job: Job;
-  saveJob: (job: Job) => void;
+  saveJobFromDetails: (job: Job) => void;
   removeJob: (job: Job) => void;
 }
 
-export const JobDetails: React.FC<Props> = ({ job, saveJob, removeJob }) => {
+export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob }) => {
 
   function handleClickSave(job: Job) {
     job.saved = true;
-    saveJob(job);
+    saveJobFromDetails(job);
   }
 
   function handleClickRemove(job: Job) {
