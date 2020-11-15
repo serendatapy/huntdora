@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import './App.css';
-import { fetchJobs } from './apiService';
+import { getData } from './apiService';
 import { Job } from './app-types';
 import { Nav } from './components/Nav'
 import { JobPosts } from './components/JobPosts'
@@ -14,19 +14,20 @@ function App() {
 
   const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
-    const getData = async () => {
-      const results = await fetchJobs<any>(searchQuery);
-      if (viewDetail) setjobDetails(results);
-      else setJobsList(results);
-      console.log("The new State is:", viewDetail, results, jobsList, jobDetails)
+    if (searchQuery !== '') {
+       const fetchJobs = async()=> {
+         console.log('Sending query',searchQuery)
+        const results:any = await getData(null,searchQuery);
+        setJobsList(results)
+       }
+       fetchJobs();
     }
-    if (searchQuery !== '') getData();
+
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
@@ -43,25 +44,38 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
   }, [savedJobs])
 
-  function saveJob(job: Job) {
+  async function saveJob(job: Job) {
     const jobExists: Job | undefined = savedJobs.find(sJob => sJob.jobId === job.jobId);
-    if (!jobExists) setSavedJobs(savedJobs => [...savedJobs, job]);
+    if (!jobExists) {
+      const newJob:Job = await getData(job.jobId,null);
+      newJob.saved = true;
+      setSavedJobs(savedJobs => [...savedJobs, newJob]);
+    }
   }
 
   function removeJob(job: Job) {
-    if (savedJobs.find(sJob => sJob.jobId === job.jobId)) setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
+      setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
+      const jobToUpdate: Job|undefined = jobsList.find(listJob => listJob.jobId === job.jobId);
+      if (jobToUpdate) jobToUpdate.saved = false;
+      setJobsList([...jobsList]);
   }
 
   function addQuery(query: string) {
-    const newPath = `/search?keywords=${query}&location=london&distanceFromLocation=20`;
-    setViewDetail(false);
-    setSearchQuery(newPath);
+    setSearchQuery(query);
   }
 
-  function getJob(jobId: number) {
-    const newPath = `jobs/${jobId}`;
-    setViewDetail(true);
-    setSearchQuery(newPath);
+  async function getJob(jobId: number) {
+    console.log('Checking if is saved...')
+    const jobCached = savedJobs.find(job => job.jobId === jobId);
+    if(jobCached) {
+      setjobDetails(jobCached)
+      console.log('Fetched Existing',jobCached)
+    }
+    else {
+      console.log('Fetching new job details');
+      const newJob:Job= await getData(jobId,null)
+      setjobDetails(newJob)
+    }
   }
 
   return (
