@@ -7,7 +7,7 @@ export async function getData(jobId: number | null, searchQuery: string | null):
   console.log('API CALL received:',jobId,searchQuery);
   return jobId !== null ?
     await apiCall(`/jobs/${jobId}`) :
-    await apiCall(`/search?keywords=${searchQuery}&location=london&distanceFromLocation=20`);
+    await apiCall(`/search?keywords=${searchQuery}`);
 }
 
 export async function apiCall(
