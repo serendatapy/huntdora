@@ -17,8 +17,8 @@ export const JobCard: React.FC<Props> = ({ job, getJob,saveJob,removeJob }) => {
   let history = useHistory();
 
   const handleOnJobClick = (jobId: number) => {
-    history.push("/job-details") // eslint-disable-line no-restricted-globals
     getJob(jobId)
+    history.push("/job-details") // eslint-disable-line no-restricted-globals
   }
   const handleAddRemove = () => {
     console.log('Changing property', job.saved)
