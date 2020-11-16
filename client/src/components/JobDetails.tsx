@@ -1,6 +1,14 @@
 import React from 'react';
+import { useState } from 'react';
 import { Job } from '../app-types';
+import { JobCard } from './JobCard';
 import parse from 'html-react-parser';
+import Typography from '@material-ui/core/Typography';
+import LocalActivityIcon from '@material-ui/icons/LocalActivity';
+import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
+import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+
 
 interface Props {
   job: Job;
@@ -10,33 +18,43 @@ interface Props {
 
 export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob }) => {
 
-  function handleClickSave(job: Job) {
-    job.saved = true;
-    saveJobFromDetails(job);
-  }
+  const [saved, setsaved] = useState<boolean>(job.saved)
 
-  function handleClickRemove(job: Job) {
-    job.saved = false;
-    removeJob(job);
+  const handleAddRemove = () => {
+    job.saved ? removeJob(job) : saveJobFromDetails(job);
+    job.saved = !job.saved;
+    setsaved((saved: boolean) => !saved);
   }
 
   function parseJobDesc() {
     if (job.jobDescription) return parse(job.jobDescription)
   }
 
-  const displaySaveRemoveBtn = (): JSX.Element => {
-    console.log('This job is saved:',job.saved);
-    return job.saved === true ?
-      (<button onClick={() => handleClickRemove(job)}>Remove</button>) :
-      (<button onClick={() => handleClickSave(job)}>Save</button>)
-  }
-
-
   return (
-    <div>
-      {displaySaveRemoveBtn()}
-      {job?.jobTitle}
-      {parseJobDesc()}
-    </div>
+    <Grid container direction={"column"}>
+      <Grid container>
+        <Grid item xs={10}>
+          <Typography variant={'h6'}>
+            {job?.jobTitle}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Checkbox
+            icon={<LocalActivityOutlinedIcon />}
+            checkedIcon={<LocalActivityIcon />}
+            checked={saved}
+            onChange={handleAddRemove}
+            inputProps={{
+              'aria-label': 'secondary checkbox'
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Grid item>
+        <Typography>
+          {parseJobDesc()}
+        </Typography>
+      </Grid>
+    </Grid>
   )
 }

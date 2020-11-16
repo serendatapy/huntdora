@@ -3,11 +3,58 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { getData } from './apiService';
 import { Job } from './app-types';
-import { Nav } from './components/Nav'
-import { JobPosts } from './components/JobPosts'
+import { Nav } from './components/Nav';
+import { NavBottom } from './components/NavBottom'
+import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
+
+import { makeStyles, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+// import IconButton from '@material-ui/core/IconButton';
+// import { Typography } from '@material-ui/core';
+// import Menu from '@material-ui/icons/Menu';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+
+//custom themes can be applied to a component
+const useStyles = makeStyles({
+  root: {
+    background: 'linear-gradient(45deg, #333,#999)',
+    border: 0,
+    borderRadius: 15,
+    color: 'white',
+    padding: '0 30px'
+  }
+})
+//global themes can be set here
+let theme = createMuiTheme({
+  typography: {
+
+  },
+  palette: {
+    primary: {
+      light: '#f5f3ed',
+      main: '#f3f0e9',
+      dark: '#aaa8a3',
+      contrastText: '#1f2f47',
+    },
+    secondary: {
+      light: '#9fdcda',
+      main: '#87d4d1',
+      dark: '#5e9492',
+      contrastText: '#1f2f47',
+    },
+  },
+})
+theme = responsiveFontSizes(theme);
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
@@ -26,7 +73,7 @@ function App() {
         console.log('Sending query', searchQuery)
         const results: any = await getData(null, searchQuery);
         results.forEach((job: Job) => {
-          if(jobExists(job.jobId, savedJobs)) job.saved = !job.saved
+          if (jobExists(job.jobId, savedJobs)) job.saved = !job.saved
         })
         setJobsList(results);
         setloading(false);
@@ -103,17 +150,54 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="">
-        <Nav addQuery={addQuery} />
-        <Switch>
-          <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-          <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-        </Switch>
-      </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
 
-    </Router>
+
+      <Container maxWidth="sm">
+        <div className="App">
+
+
+          <Router>
+            <div className="">
+              <AppBar color="primary">
+                <Toolbar>
+                  <Nav addQuery={addQuery} />
+                  {/* <IconButton>
+                <Menu />
+              </IconButton> */}
+                </Toolbar>
+              </AppBar>
+
+              <Switch>
+                <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+                <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+                <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+              </Switch>
+            </div>
+            <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+              <Toolbar>
+                <NavBottom/>
+              </Toolbar>
+            </AppBar>
+          </Router>
+
+
+          <Grid container spacing={2} justify="center">
+            <Grid item xs={3} sm={6}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+            <Grid item xs={3} sm={6}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+            <Grid item xs={3} lg={12}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+          </Grid>
+
+        </div>
+      </Container>
+    </ThemeProvider>
   );
 }
 

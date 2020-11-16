@@ -1,6 +1,12 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import Textfield from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
+import StarIcon from '@material-ui/icons/Star';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import Grid from '@material-ui/core/Grid';
 
 type FormData = {
   query: string;
@@ -28,56 +34,81 @@ export const Nav: React.FC<Props> = (props) => {
 
   const onSubmit = (data: any) => {
     console.log('Submited: ', data);
-    props.addQuery(data);
-    history.push('/job-search');
+    if (data.query || data.locationName || data.distanceFrom || data.minimumSalary) {
+      console.log('Submitting: ', data);
+      props.addQuery(data);
+      history.push('/job-search');
+    }
   }
 
-  const handleSavedPosts = (): void => {
-    history.push('/saved-jobs')
-  }
+  // const handleSavedPosts = (): void => {
+  //   history.push('/saved-jobs')
+  // }
 
-  const handleBackToSearch = (): void => {
-    history.push('/job-search')
-  }
+  // const handleBackToSearch = (): void => {
+  //   history.push('/job-search')
+  // }
 
-  const displayBtn = (): JSX.Element => {
-    if (location.pathname === '/saved-jobs') return (<button onClick={handleBackToSearch}>Back to Search</button>)
-    else if (location.pathname === '/job-details') return (<><button onClick={handleBackToSearch}>Back to Search</button> <button onClick={handleSavedPosts}>SavedPosts</button></>)
-    else return (<button onClick={handleSavedPosts}>SavedPosts</button>)
-  }
+  // const displayBtn = (): JSX.Element => {
+  //   if (location.pathname === '/saved-jobs') return (
+  //     <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
+  //       <FindInPageRoundedIcon />
+  //     </IconButton>)
+  //   else if (location.pathname === '/job-details') return (<>
+  //     <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
+  //       <FindInPageRoundedIcon />
+  //     </IconButton>
+  //     <IconButton color="primary" aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
+  //       <SaveIcon />
+  //     </IconButton>
+  //   </>)
+  //   else return (
+  //     <IconButton color="primary" aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
+  //       <SaveIcon />
+  //     </IconButton>)
+  // }
 
 
   return (
-    <div className="">
-      <div>Now showing post {location.pathname}</div>
+    <Grid container justify="space-evenly" spacing={1}>
+      {/* <div>Now showing post {location.pathname}</div> */}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
+        <Textfield
           name="query"
-          ref={register}
+          inputRef={register}
           placeholder="Search for a job in the uk..."
           defaultValue=''
-        ></input>
-        <input
+          style={{padding:5, marginTop:3}}
+        />
+        {/* <Textfield
           name="locationName"
-          ref={register}
+          inputRef={register}
           placeholder="Where"
           defaultValue=''
-        ></input>
-        <input
+        />
+        <Textfield
           name="distanceFrom"
-          ref={register}
+          inputRef={register}
           placeholder="how far?"
           defaultValue=''
-        ></input>
-        <input
+        />
+        <Textfield
           name="minimumSalary"
-          ref={register}
+          inputRef={register}
           placeholder="Approximate salary"
           defaultValue=''
-        ></input>
-        <button type="submit">Search</button>
+        /> */}
+        {/* <Button variant="contained" color="primary" type="submit">Search</Button> */}
+        <IconButton style={{color:'#666D82'}} aria-label="upload picture" component="button" type="submit">
+          <SearchIcon />
+        </IconButton>
       </form>
-      {displayBtn()}
-    </div>
+      {/* <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
+        <PageviewIcon />
+      </IconButton>
+      <IconButton color="primary" aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
+        <StarIcon />
+      </IconButton> */}
+    </Grid>
   )
 }
