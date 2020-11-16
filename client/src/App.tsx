@@ -3,11 +3,46 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { getData } from './apiService';
 import { Job } from './app-types';
-import { Nav } from './components/Nav'
-import { JobPosts } from './components/JobPosts'
+import { Nav } from './components/Nav';
+import { NavBottom } from './components/NavBottom'
+import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
+
+import { orange } from '@material-ui/core/colors'
+import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import { Typography } from '@material-ui/core';
+import Menu from '@material-ui/icons/Menu';
+
+//custom themes can be applied to a component
+const useStyles = makeStyles({
+  root: {
+    background: 'linear-gradient(45deg, #333,#999)',
+    border: 0,
+    borderRadius: 15,
+    color: 'white',
+    padding: '0 30px'
+  }
+})
+//global themes can be set here
+const theme = createMuiTheme({
+  typography: {
+  },
+  palette: {
+    primary: {
+      main: orange[500],
+    }
+  },
+})
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
@@ -26,7 +61,7 @@ function App() {
         console.log('Sending query', searchQuery)
         const results: any = await getData(null, searchQuery);
         results.forEach((job: Job) => {
-          if(jobExists(job.jobId, savedJobs)) job.saved = !job.saved
+          if (jobExists(job.jobId, savedJobs)) job.saved = !job.saved
         })
         setJobsList(results);
         setloading(false);
@@ -103,17 +138,56 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="">
-        <Nav addQuery={addQuery} />
-        <Switch>
-          <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-          <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-        </Switch>
-      </div>
+    <ThemeProvider theme={theme}>
 
-    </Router>
+
+      <Container maxWidth="xs">
+        <div className="App">
+
+
+          <Router>
+            <div className="">
+              <AppBar color="secondary">
+                <Toolbar>
+                  <Nav addQuery={addQuery} />
+                  {/* <IconButton>
+                <Menu />
+              </IconButton> */}
+                </Toolbar>
+              </AppBar>
+
+              <Switch>
+                <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+                <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+                <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+              </Switch>
+            </div>
+            <AppBar color="secondary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+              <Toolbar>
+                <NavBottom/>
+                {/* <IconButton>
+                <Menu />
+              </IconButton> */}
+              </Toolbar>
+            </AppBar>
+          </Router>
+
+
+          <Grid container spacing={2} justify="center">
+            <Grid item xs={3} sm={6}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+            <Grid item xs={3} sm={6}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+            <Grid item xs={3} lg={12}>
+              <Paper style={{ height: 75, width: '100%', }}></Paper>
+            </Grid>
+          </Grid>
+
+        </div>
+      </Container>
+    </ThemeProvider>
   );
 }
 
