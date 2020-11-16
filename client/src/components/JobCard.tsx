@@ -47,7 +47,7 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
             </Grid>
             <Grid item xs={2}>
               <Checkbox
-                icon={<LocalActivityOutlinedIcon />}
+                icon={<LocalActivityOutlinedIcon  />}
                 checkedIcon={<LocalActivityIcon />}
                 checked={saved}
                 onChange={handleAddRemove}

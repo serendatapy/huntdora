@@ -99,7 +99,7 @@ export const Nav: React.FC<Props> = (props) => {
           defaultValue=''
         /> */}
         {/* <Button variant="contained" color="primary" type="submit">Search</Button> */}
-        <IconButton color="primary" aria-label="upload picture" component="button" type="submit">
+        <IconButton style={{color:'#666D82'}} aria-label="upload picture" component="button" type="submit">
           <SearchIcon />
         </IconButton>
       </form>

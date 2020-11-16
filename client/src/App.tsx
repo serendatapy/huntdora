@@ -11,17 +11,18 @@ import { Loading } from './components/Loading';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 
-import { orange } from '@material-ui/core/colors'
-import { makeStyles, ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import { Typography } from '@material-ui/core';
-import Menu from '@material-ui/icons/Menu';
+// import IconButton from '@material-ui/core/IconButton';
+// import { Typography } from '@material-ui/core';
+// import Menu from '@material-ui/icons/Menu';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 
 //custom themes can be applied to a component
 const useStyles = makeStyles({
@@ -34,15 +35,26 @@ const useStyles = makeStyles({
   }
 })
 //global themes can be set here
-const theme = createMuiTheme({
+let theme = createMuiTheme({
   typography: {
+
   },
   palette: {
     primary: {
-      main: orange[500],
-    }
+      light: '#f5f3ed',
+      main: '#f3f0e9',
+      dark: '#aaa8a3',
+      contrastText: '#1f2f47',
+    },
+    secondary: {
+      light: '#9fdcda',
+      main: '#87d4d1',
+      dark: '#5e9492',
+      contrastText: '#1f2f47',
+    },
   },
 })
+theme = responsiveFontSizes(theme);
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
@@ -139,15 +151,16 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
 
 
-      <Container maxWidth="xs">
+      <Container maxWidth="sm">
         <div className="App">
 
 
           <Router>
             <div className="">
-              <AppBar color="secondary">
+              <AppBar color="primary">
                 <Toolbar>
                   <Nav addQuery={addQuery} />
                   {/* <IconButton>
@@ -162,12 +175,9 @@ function App() {
                 <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
               </Switch>
             </div>
-            <AppBar color="secondary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+            <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
               <Toolbar>
                 <NavBottom/>
-                {/* <IconButton>
-                <Menu />
-              </IconButton> */}
               </Toolbar>
             </AppBar>
           </Router>

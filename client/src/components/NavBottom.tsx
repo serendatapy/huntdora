@@ -20,13 +20,13 @@ export const NavBottom: React.FC = () => {
   }
 
   return (
-    <Grid container justify="space-evenly" spacing={1}>
+    <Grid container justify="space-evenly" spacing={1} >
       {/* <div>Now showing post {location.pathname}</div> */}
-      <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
-        <PageviewIcon />
+      <IconButton style={{color:'#F69483'}} aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
+        <PageviewIcon fontSize='large'/>
       </IconButton>
-      <IconButton color="primary" aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
-        <StarIcon />
+      <IconButton style={{color:'#F5CE89'}} aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
+        <StarIcon fontSize='large'/>
       </IconButton>
     </Grid>
   )

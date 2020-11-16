@@ -16,8 +16,8 @@ export const JobPosts: React.FC<Props> = (props) => {
   return (
     <Grid container spacing={3}>
       {props.jobs?.map(job => (
-        <Grid item style={{  width: '100%' }}>
-          <JobCard key={job.jobId} job={job} getJob={props.getJob} saveJob={props.saveJob} removeJob={props.removeJob} />
+        <Grid item style={{  width: '100%' }} key={job.jobId}>
+          <JobCard  job={job} getJob={props.getJob} saveJob={props.saveJob} removeJob={props.removeJob} />
         </Grid>
       ))}
     </Grid>
