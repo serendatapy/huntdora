@@ -8,32 +8,27 @@ import { NavBottom } from './components/NavBottom'
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
+import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { makeStyles, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-// import IconButton from '@material-ui/core/IconButton';
-// import { Typography } from '@material-ui/core';
-// import Menu from '@material-ui/icons/Menu';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 
 //custom themes can be applied to a component
-const useStyles = makeStyles({
-  root: {
-    background: 'linear-gradient(45deg, #333,#999)',
-    border: 0,
-    borderRadius: 15,
-    color: 'white',
-    padding: '0 30px'
-  }
-})
+// const useStyles = makeStyles({
+//   root: {
+//     background: 'linear-gradient(45deg, #333,#999)',
+//     border: 0,
+//     borderRadius: 15,
+//     color: 'white',
+//     padding: '0 30px'
+//   }
+// })
 //global themes can be set here
 let theme = createMuiTheme({
   typography: {
@@ -126,9 +121,9 @@ function App() {
 
   function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
     let { query, locationName, distanceFrom, minimumSalary } = data;
-    const locationQuery = locationName === '' ? '' : `&locationName=${locationName}`;
-    const distanceQuery = distanceFrom === '' ? '' : `&distanceFromLocation=${distanceFrom}`;
-    const salaryQuery = minimumSalary === '' ? '' : `&minimumSalary=${minimumSalary}`;
+    const locationQuery = locationName ? `&locationName=${locationName}` : `&locationName=london`;
+    const distanceQuery = distanceFrom ? `&distanceFromLocation=${distanceFrom}` : `&distanceFromLocation=10`;
+    const salaryQuery = minimumSalary ? `&minimumSalary=${minimumSalary}` : '';
     setloading(true);
     setSearchQuery(query + locationQuery + distanceQuery + salaryQuery);
   }
@@ -152,38 +147,33 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-
       <Container maxWidth="sm">
         <div className="App">
 
-
           <Router>
-            <div className="">
-              <AppBar color="primary">
-                <Toolbar>
-                  <Nav addQuery={addQuery} />
-                  {/* <IconButton>
+            <AppBar color="primary">
+              <Toolbar >
+                <Nav addQuery={addQuery} />
+                {/* <IconButton>
                 <Menu />
               </IconButton> */}
-                </Toolbar>
-              </AppBar>
+              </Toolbar>
+            </AppBar>
 
-              <Switch>
-                <Route path='/job-search' key="fetched-jobs" exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-                <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-                <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-              </Switch>
-            </div>
+            <Switch>
+              <Route path='/' exact render={() => (<Welcome />)} />
+              <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+              <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+              <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+            </Switch>
             <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
               <Toolbar>
-                <NavBottom/>
+                <NavBottom />
               </Toolbar>
             </AppBar>
           </Router>
 
-
-          <Grid container spacing={2} justify="center">
+          {/* <Grid container spacing={2} justify="center">
             <Grid item xs={3} sm={6}>
               <Paper style={{ height: 75, width: '100%', }}></Paper>
             </Grid>
@@ -193,7 +183,7 @@ function App() {
             <Grid item xs={3} lg={12}>
               <Paper style={{ height: 75, width: '100%', }}></Paper>
             </Grid>
-          </Grid>
+          </Grid> */}
 
         </div>
       </Container>

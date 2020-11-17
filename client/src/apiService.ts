@@ -11,18 +11,26 @@ export async function getData(jobId: number | null, searchQuery: string | null):
 }
 
 export async function apiCall(
+
   path: string
 ) :Promise<Job|Job[]> {
-  const { data } = await reedAPI.get(path);
-  console.log("Fetched", data)
-  let jobs;
-  if (data.results) {
-    jobs = data.results.map((job: any) => Job.parse(job))
-  } else {
-    jobs = Job.parse(data);
+  let jobs:Job|Job[] = [];
+
+  try {
+    const { data } = await reedAPI.get(path);
+    console.log("Fetched", data)
+
+    if (data.results) {
+      jobs = data.results.map((job: any) => Job.parse(job))
+    } else {
+      jobs = Job.parse(data);
+    }
+    console.log("Data has been transformed!", jobs)
+    return jobs;
+  } catch (error) {
+    console.log('Error fetching!',error);
+    return jobs;
   }
-  console.log("Data has been transformed!", jobs)
-  return jobs;
 }
 
 
