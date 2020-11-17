@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 
 interface Props {
   job: Job;
@@ -17,11 +18,22 @@ interface Props {
   removeJob: (job: Job) => void;
 }
 
+const useStyles = makeStyles({
+  root: {
+    transition: "transform 0.25s ease-in-out"
+  },
+  cardHovered: {
+    transform: "scale(1.025)"
+  }
+});
+
 
 export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) => {
   const [saved, setsaved] = useState<boolean>(job.saved)
+  const [raised, setraised] = useState({ raised: false, shadow: 10 })
 
   let history = useHistory();
+  const classes = useStyles();
 
   const handleOnJobClick = (jobId: number) => {
     getJob(jobId)
@@ -36,7 +48,14 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
   }
 
   return (
-    <Card raised={true}>
+    <Card
+      className={classes.root}
+      classes={{ root: raised.raised ? classes.cardHovered : "" }}
+      onMouseOver={() => setraised({ raised: true, shadow: 20 })}
+      onMouseOut={() => setraised({ raised: false, shadow: 10 })}
+      raised={raised.raised}
+      elevation={raised.shadow}
+    >
       <CardContent>
         <Grid container direction="column">
           <Grid container direction="row" spacing={1}>
@@ -47,7 +66,7 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
             </Grid>
             <Grid item xs={2}>
               <Checkbox
-                icon={<LocalActivityOutlinedIcon  />}
+                icon={<LocalActivityOutlinedIcon />}
                 checkedIcon={<LocalActivityIcon />}
                 checked={saved}
                 onChange={handleAddRemove}

@@ -9,6 +9,10 @@
   margin-top: 80px;
 }
 
+.card-hovered {
+  transform: scale3d(1.05, 1.05, 1);
+}
+
 /* .card {
   box-shadow: 0 0 15px 2px #3333;
   border-radius: 5px;
