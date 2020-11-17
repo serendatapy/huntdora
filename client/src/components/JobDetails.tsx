@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import { Job } from '../app-types';
-import { JobCard } from './JobCard';
 import parse from 'html-react-parser';
 import Typography from '@material-ui/core/Typography';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
@@ -34,7 +33,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
     <Grid container direction={"column"}>
       <Grid container>
         <Grid item xs={10}>
-          <Typography variant={'h6'}>
+          <Typography variant={'h6'} component="div">
             {job?.jobTitle}
           </Typography>
         </Grid>

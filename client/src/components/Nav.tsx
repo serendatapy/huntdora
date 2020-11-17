@@ -4,9 +4,11 @@ import { useForm } from 'react-hook-form';
 import Textfield from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import StarIcon from '@material-ui/icons/Star';
-import PageviewIcon from '@material-ui/icons/Pageview';
+import { useEffect } from 'react';
+
 import Grid from '@material-ui/core/Grid';
+import welcomeAnimationNav from "../loading-spinner.json";
+import lottie from 'lottie-web';
 
 type FormData = {
   query: string;
@@ -29,6 +31,16 @@ export const Nav: React.FC<Props> = (props) => {
 
   let history = useHistory();
   let location = useLocation();
+
+  useEffect(() => {
+    let nav = lottie.loadAnimation({
+      container: document.querySelector("#load-welcome-nav")!,
+      animationData: welcomeAnimationNav,
+      renderer: "svg", // "canvas", "html"
+      loop: false, // boolean
+      autoplay: true,
+    });
+  }, []);
 
   const { register, handleSubmit } = useForm<FormData>();
 
@@ -71,16 +83,21 @@ export const Nav: React.FC<Props> = (props) => {
 
   return (
     <Grid container justify="space-evenly" spacing={1}>
+      <Grid item xs={2}>
+        <div id="load-welcome-nav" style={{width:'100%',maxWidth:100, height:'auto'}} />
+      </Grid>
       {/* <div>Now showing post {location.pathname}</div> */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Textfield
-          name="query"
-          inputRef={register}
-          placeholder="Search for a job in the uk..."
-          defaultValue=''
-          style={{padding:5, marginTop:3}}
-        />
-        {/* <Textfield
+      <Grid item xs={10}  >
+        <form onSubmit={handleSubmit(onSubmit)} style={{ height:'100%',width: '100%', display:"flex", justifyItems:"center", alignItems:"center" }} >
+          <Textfield
+            name="query"
+            inputRef={register}
+            placeholder="Search for a job in the uk..."
+            defaultValue=''
+            style={{width:'80%'}}
+          />
+
+          {/* <Textfield
           name="locationName"
           inputRef={register}
           placeholder="Where"
@@ -98,11 +115,13 @@ export const Nav: React.FC<Props> = (props) => {
           placeholder="Approximate salary"
           defaultValue=''
         /> */}
-        {/* <Button variant="contained" color="primary" type="submit">Search</Button> */}
-        <IconButton style={{color:'#666D82'}} aria-label="upload picture" component="button" type="submit">
-          <SearchIcon />
-        </IconButton>
-      </form>
+          {/* <Button variant="contained" color="primary" type="submit">Search</Button> */}
+          <IconButton style={{ color: '#666D82' }} aria-label="search" component="button" type="submit">
+            <SearchIcon />
+          </IconButton>
+        </form>
+
+      </Grid>
       {/* <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
         <PageviewIcon />
       </IconButton>

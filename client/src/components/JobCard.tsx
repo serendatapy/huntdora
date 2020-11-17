@@ -59,9 +59,9 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
       <CardContent>
         <Grid container direction="column">
           <Grid container direction="row" spacing={1}>
-            <Grid item xs={10}>
+            <Grid item xs={10} onClick={() => handleOnJobClick(job.jobId)}>
               <Typography variant="h6">
-                <div onClick={() => handleOnJobClick(job.jobId)}>{job.jobTitle}</div>
+                <div>{job.jobTitle}</div>
               </Typography>
             </Grid>
             <Grid item xs={2}>

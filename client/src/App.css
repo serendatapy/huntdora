@@ -6,19 +6,5 @@
 }
 
 .App {
-  margin-top: 80px;
+  margin-top: 12vh;
 }
-
-.card-hovered {
-  transform: scale3d(1.05, 1.05, 1);
-}
-
-/* .card {
-  box-shadow: 0 0 15px 2px #3333;
-  border-radius: 5px;
-  margin: 20px 50px;
-  font-size: 1rem;
-  display: flex;
-  padding: 10px;
-  cursor: pointer;
-} */
