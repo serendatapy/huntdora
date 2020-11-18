@@ -1,8 +1,6 @@
 import { reedAPI } from './apiCall';
 import { Job } from './app-types'
 
-//const pathGetJob: string = `jobs/`;
-
 export async function getData(jobId: number | null, searchQuery: string | null): Promise<any> {
   console.log('API CALL received:', jobId, searchQuery);
   return jobId !== null ?
@@ -10,6 +8,10 @@ export async function getData(jobId: number | null, searchQuery: string | null):
     await apiCall(`/search?keywords=${searchQuery}`);
 }
 
+/**
+ * Look at axios cancel token
+ * documentation for better request management
+ */
 export async function apiCall(
 
   path: string

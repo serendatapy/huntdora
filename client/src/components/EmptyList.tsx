@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import puzzleAnimation from "../33692-puzzle-animation.json";
 import lottie from 'lottie-web';
-import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import { Typography,Grid } from '@material-ui/core';
 
 export const EmptyList = () => {
 
@@ -10,8 +9,8 @@ export const EmptyList = () => {
     let empty = lottie.loadAnimation({
       container: document.querySelector("#puzzle-animation")!,
       animationData: puzzleAnimation,
-      renderer: "svg", // "canvas", "html"
-      loop: false, // boolean
+      renderer: "svg",
+      loop: false,
       autoplay: true,
     });
     return () => {

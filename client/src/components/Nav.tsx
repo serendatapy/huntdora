@@ -1,15 +1,14 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import Textfield from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { useEffect } from 'react';
-
 import Grid from '@material-ui/core/Grid';
+import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 import welcomeAnimationNav from "../loading-spinner.json";
 import lottie from 'lottie-web';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 
 type FormData = {
   query: string;
@@ -31,23 +30,29 @@ interface Props {
 export const Nav: React.FC<Props> = (props) => {
 
   let history = useHistory();
-  let location = useLocation();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const { register, handleSubmit, control } = useForm<FormData>();
 
   useEffect(() => {
     let nav = lottie.loadAnimation({
       container: document.querySelector("#load-welcome-nav")!,
       animationData: welcomeAnimationNav,
-      renderer: "svg", // "canvas", "html"
-      loop: false, // boolean
+      renderer: "svg",
+      loop: false,
       autoplay: true,
     });
   }, []);
 
-  const { register, handleSubmit, control } = useForm<FormData>();
+  const handleBackToWelcome = (): void => {
+    history.push('/')
+  }
 
-  const onSubmit = (data: any) => {
-    handleClose();
+  /************************
+   * Form utility functions
+   ************************/
+
+  const onSubmit = (data: any): void => {
+    handleCloseForm();
     console.log('Submited: ', data);
     if (data.query || data.locationName || data.distanceFrom || data.minimumSalary) {
       console.log('Submitting: ', data);
@@ -56,37 +61,29 @@ export const Nav: React.FC<Props> = (props) => {
     }
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpenForm = (): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleCloseForm = (): void => {
     setOpen(false);
   };
 
-  function valuetext(value: number) {
+  function valuetext(value: number): string {
     return `${value}miles`;
   }
 
-  // const handleSavedPosts = (): void => {
-  //   history.push('/saved-jobs')
-  // }
-
-  // const handleBackToSearch = (): void => {
-  //   history.push('/job-search')
-  // }
 
   return (
     <Grid container justify="space-evenly" spacing={1}>
       <Grid item xs={2}>
-        <div id="load-welcome-nav" style={{ width: '100%', maxWidth: 100, height: 'auto' }} />
+        <div id="load-welcome-nav" style={{ width: '100%', maxWidth: 100, height: 'auto' }} onClick={handleBackToWelcome} />
       </Grid>
-      {/* <div>Now showing post {location.pathname}</div> */}
       <Grid item xs={10}>
         <Grid container justify="center" alignItems="center" direction="column">
 
           <Textfield
-            onClick={handleClickOpen}
+            onClick={handleClickOpenForm}
             inputRef={register}
             placeholder="Search for a job in the uk..."
             defaultValue=''
@@ -94,7 +91,7 @@ export const Nav: React.FC<Props> = (props) => {
             color='secondary'
             InputProps={{
               startAdornment: (
-                <IconButton style={{ color: '#666D82' }} aria-label="search" component="button" onClick={handleClickOpen}>
+                <IconButton style={{ color: '#666D82' }} aria-label="search" component="button" onClick={handleClickOpenForm}>
                   <SearchIcon fontSize='large' />
                 </IconButton>
               ),
@@ -103,7 +100,7 @@ export const Nav: React.FC<Props> = (props) => {
 
           <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={handleCloseForm}
             fullWidth={true}
             PaperProps={{
               style: {
@@ -112,8 +109,7 @@ export const Nav: React.FC<Props> = (props) => {
               },
             }}>
             <List>
-              <DialogTitle>Fill the form</DialogTitle>
-              {/* style={{ width: '100%', display: "flex", justifyItems: "center", alignItems: "center" }} */}
+              <DialogTitle>Set Filters</DialogTitle>
               <form onSubmit={handleSubmit(onSubmit)}  >
                 <ListItem>
                   <Textfield
@@ -121,7 +117,7 @@ export const Nav: React.FC<Props> = (props) => {
                     inputRef={register}
                     placeholder="Search for a job in the uk..."
                     defaultValue=''
-                    style={{ width: '80%'}}
+                    style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
                   />
@@ -132,7 +128,7 @@ export const Nav: React.FC<Props> = (props) => {
                     inputRef={register}
                     placeholder="Where"
                     defaultValue=''
-                    style={{ width: '80%'}}
+                    style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
                   />
@@ -170,7 +166,6 @@ export const Nav: React.FC<Props> = (props) => {
                   />
                 </ListItem>
                 <ListItem>
-
                   <Controller
                     name="minimumSalary"
                     control={control}
@@ -203,7 +198,6 @@ export const Nav: React.FC<Props> = (props) => {
                   />
 
                 </ListItem>
-                {/* <Button variant="contained" color="primary" type="submit">Search</Button> */}
                 <DialogActions>
                   <Button
                     color="secondary"
@@ -214,24 +208,15 @@ export const Nav: React.FC<Props> = (props) => {
                     startIcon={<SearchIcon />}
                   >Search
                   </Button>
-                  <Button onClick={handleClose} color="secondary" variant="contained">
+                  <Button onClick={handleCloseForm} color="secondary" variant="contained">
                     Cancel
                  </Button>
                 </DialogActions>
-
               </form>
             </List>
-
           </Dialog>
         </Grid>
-
       </Grid>
-      {/* <IconButton color="primary" aria-label="Back to Search" component="button" onClick={handleBackToSearch}>
-        <PageviewIcon />
-      </IconButton>
-      <IconButton color="primary" aria-label="Saved Posts" component="button" onClick={handleSavedPosts}>
-        <StarIcon />
-      </IconButton> */}
     </Grid>
   )
 }

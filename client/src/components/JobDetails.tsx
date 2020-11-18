@@ -2,13 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import { Job } from '../app-types';
 import parse from 'html-react-parser';
-import Typography from '@material-ui/core/Typography';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
-import { Button } from '@material-ui/core';
-
+import { Checkbox, Grid, Typography, Button } from '@material-ui/core';
 
 interface Props {
   job: Job;
@@ -20,21 +16,24 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
 
   const [saved, setsaved] = useState<boolean>(job.saved)
 
-  const handleAddRemove = () => {
+  const handleAddRemove = (): void => {
     job.saved ? removeJob(job) : saveJobFromDetails(job);
     job.saved = !job.saved;
     setsaved((saved: boolean) => !saved);
   }
-
-  function parseJobDesc() {
+  /**
+   * Long job description returns
+   * a string of HTML
+   */
+  function parseJobDesc(): JSX.Element | JSX.Element[] | undefined {
     if (job.jobDescription) return parse(job.jobDescription)
   }
 
-  function handleApply(url:string|null) {
-    try{
-      if(url=== null) throw new Error('invalid url');
+  function handleApply(url: string | null): void {
+    try {
+      if (url === null) throw new Error('invalid url');
       window.open(url);
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
@@ -64,7 +63,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
             aria-label="search"
             component="button"
             size='large'
-            onClick={()=>handleApply(job?.externalUrl || job?.jobUrl)}
+            onClick={() => handleApply(job?.externalUrl || job?.jobUrl)}
             variant="contained"
           >Apply
                   </Button>

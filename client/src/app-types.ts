@@ -19,9 +19,12 @@ export class Job {
     const job: Job = Object.assign(new Job(), data);
     return job;
   }
-
+  /**
+   * this function is necessary because short job listings don't provide type of pay
+   * as long job listings do, so one needs to infer from the quantity the frequency
+   * of payment. If long joblistings are fetched instead this will no longer be necessary
+   */
   static calculateSalaryFreq(minSalary: number | null, maxSalary: number | null): string {
-
     if (maxSalary === null) return 'Negotiable'
     else if (maxSalary > 1000) return `${minSalary}-${maxSalary} per annum`
     else if (maxSalary > 100) return `${minSalary}-${maxSalary} per day`
@@ -29,10 +32,14 @@ export class Job {
   }
 }
 
-export interface JobList {
-  results: Job[];
-}
-
+/**
+ * This interface will need to be implemented in case one starts fetching and storing
+ * only the detailed job listing.
+ * At the moment the 'Short Job List' and the single 'Long Job List' objects are being
+ * passed around interchangeably, but this isn't correct in terms of app expectations or
+ * typescript.
+ */
+/*
 export class JobDetail {
   jobId!: number;
   jobTitle!: string;
@@ -51,9 +58,14 @@ export class JobDetail {
   contractType!: string;
   jobDescription!: string;
   applicationCount!: number;
-}
+  externalUrl!: string | null;
+  jobUrl!: string|null;
+}*/
 
 
+/**
+ * Example of long job listing object
+ */
 export const MockDataDetail = {
   "employerId": 580757,
   "employerName": "Vertech Group (UK) Ltd",

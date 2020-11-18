@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
+import { Fade, Typography, Grid } from '@material-ui/core';
 import welcomeAnimation from "../loading-spinner.json";
 import lottie from 'lottie-web';
-import Grid from '@material-ui/core/Grid';
-import { Fade, Typography } from '@material-ui/core';
 
 export const Welcome = () => {
 
@@ -10,14 +9,13 @@ export const Welcome = () => {
     let welcome = lottie.loadAnimation({
       container: document.querySelector("#load-welcome")!,
       animationData: welcomeAnimation,
-      renderer: "svg", // "canvas", "html"
-      loop: true, // boolean
+      renderer: "svg",
+      loop: true,
       autoplay: true,
     });
-    return () => {
+    return ():void => {
       welcome.destroy();
     }
-
   }, []);
 
   return (
@@ -28,7 +26,7 @@ export const Welcome = () => {
       <Grid item>
         <Fade in={true} timeout={2000}>
           <Typography align="center" variant="h1" component="div">
-            <div style={{ fontFamily: 'Curly, serif' }}>Huntdora</div>
+            <div>Huntdora</div>
           </Typography>
         </Fade>
       </Grid>

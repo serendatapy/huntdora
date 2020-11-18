@@ -2,8 +2,3 @@
 *{
   font-family: 'Lato', sans-serif;
 }
-
-@font-face {
-  font-family: 'Curly';
-  src: local('Curly'), url(./fonts/Curly-PKK1m.ttf) format('truetype');
-}

@@ -2,13 +2,9 @@ import React from 'react'
 import { Job } from '../app-types'
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react'
-import Checkbox from '@material-ui/core/Checkbox';
+import {Checkbox,Typography,Card,CardContent,Grid} from '@material-ui/core';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface Props {
@@ -17,7 +13,9 @@ interface Props {
   saveJob: (job: Job) => void;
   removeJob: (job: Job) => void;
 }
-
+/**
+ * Hover over card animation
+ */
 const useStyles = makeStyles({
   root: {
     transition: "transform 0.25s ease-in-out"
@@ -35,11 +33,11 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
   let history = useHistory();
   const classes = useStyles();
 
-  const handleOnJobClick = (jobId: number) => {
+  const handleOnJobClick = (jobId: number):void => {
     getJob(jobId)
     history.push("/job-details") // eslint-disable-line no-restricted-globals
   }
-  const handleAddRemove = () => {
+  const handleAddRemove = ():void => {
     console.log('Changing property', job.saved)
     setsaved((saved) => !saved);
     job.saved ? removeJob(job) : saveJob(job);

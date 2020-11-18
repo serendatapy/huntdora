@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData } from './apiService';
 import { Job } from './app-types';
@@ -10,32 +9,32 @@ import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-
+import {Container, CssBaseline,AppBar,Toolbar} from '@material-ui/core/';
 import { makeStyles, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 
 
-//custom themes can be applied to a component
-// const useStyles = makeStyles({
-//   root: {
-//     background: 'linear-gradient(45deg, #333,#999)',
-//     border: 0,
-//     borderRadius: 15,
-//     color: 'white',
-//     padding: '0 30px'
-//   }
-// })
+/*Example of custom styles that can be applied to a component (a custom button for example)
+Follow docs for specific properties to use
+ const useStyles = makeStyles({
+   root: {
+     background: 'linear-gradient(45deg, #333,#999)',
+     border: 0,
+     borderRadius: 15,
+     color: 'white',
+     padding: '0 30px'
+   }
+ })*/
+
 //global themes can be set here
 let theme = createMuiTheme({
+  /*text styling */
   typography: {
     allVariants: {
       color: '#1F2F47',
     }
   },
+  /*General Primary and Secondary colours */
   palette: {
     primary: {
       light: '#f5f3ed',
@@ -50,31 +49,31 @@ let theme = createMuiTheme({
       contrastText: '#1f2f47',
     },
   },
+  /*Style of text boxes */
   overrides: {
     MuiFilledInput: {
       input: {
-       padding:'5px',
+        padding: '5px',
       },
     },
     MuiInputBase: {
       input: {
-       padding:'5px',
+        padding: '5px',
       },
     },
   },
 })
-
 theme = responsiveFontSizes(theme);
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
-  const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState<boolean>(false)
 
   useEffect(() => {
     console.log('executing useEffect:', searchQuery);
@@ -101,38 +100,16 @@ function App() {
     if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
   }, [])
   /**
-   *update jobs on change
+   *update jobs on save
    */
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
   }, [savedJobs])
 
-  async function saveJob(job: Job) {
-    if (!jobExists(job.jobId, savedJobs)) {
-      const newJob: Job = await getData(job.jobId, null);
-      newJob.saved = true;
-      setSavedJobs(savedJobs => [...savedJobs, newJob]);
-    }
-  }
-  function saveJobFromDetails(job: Job) {
-    if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
-    updateJobInList(job.jobId);
-  }
-
-  function removeJob(job: Job) {
-    setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
-    updateJobInList(job.jobId);
-  }
-
-  function jobExists(jobId: number, list: any[]): Job | undefined {
-    return list.find(listJob => listJob.jobId === jobId);
-  }
-
-  function updateJobInList(jobId: number) {
-    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
-    if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
-    setJobsList([...jobsList]);
-  }
+  /**
+ *
+ * functions to query api
+ */
 
   function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
     let { query, locationName, distanceFrom, minimumSalary } = data;
@@ -159,48 +136,63 @@ function App() {
     }
   }
 
+  /*job saved from memory rather than refetched*/
+  async function saveJob(job: Job) {
+    if (!jobExists(job.jobId, savedJobs)) {
+      const newJob: Job = await getData(job.jobId, null);
+      newJob.saved = true;
+      setSavedJobs(savedJobs => [...savedJobs, newJob]);
+    }
+  }
+
+  /*************************************
+   *
+   * Function Utilities for handling
+   * saved job data and state
+   *************************************/
+
+  function saveJobFromDetails(job: Job) {
+    if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
+    updateJobInList(job.jobId);
+  }
+
+  function removeJob(job: Job) {
+    setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
+    updateJobInList(job.jobId);
+  }
+
+  function jobExists(jobId: number, list: any[]): Job | undefined {
+    return list.find(listJob => listJob.jobId === jobId);
+  }
+
+  function updateJobInList(jobId: number) {
+    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
+    if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
+    setJobsList([...jobsList]);
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container maxWidth="sm">
-        <div className="App">
-
-          <Router>
-            <AppBar color="primary">
-              <Toolbar >
-                <Nav addQuery={addQuery} />
-                {/* <IconButton>
-                <Menu />
-              </IconButton> */}
-              </Toolbar>
-            </AppBar>
-
-            <Switch>
-              <Route path='/' exact render={() => (<Welcome />)} />
-              <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-              <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-              <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-            </Switch>
-            <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
-              <Toolbar>
-                <NavBottom />
-              </Toolbar>
-            </AppBar>
-          </Router>
-
-          {/* <Grid container spacing={2} justify="center">
-            <Grid item xs={3} sm={6}>
-              <Paper style={{ height: 75, width: '100%', }}></Paper>
-            </Grid>
-            <Grid item xs={3} sm={6}>
-              <Paper style={{ height: 75, width: '100%', }}></Paper>
-            </Grid>
-            <Grid item xs={3} lg={12}>
-              <Paper style={{ height: 75, width: '100%', }}></Paper>
-            </Grid>
-          </Grid> */}
-
-        </div>
+      <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
+      <Container maxWidth="sm" className="App">
+        <Router>
+          <AppBar color="primary">
+            <Toolbar >
+              <Nav addQuery={addQuery} />
+            </Toolbar>
+          </AppBar>
+          <Switch>
+            <Route path='/' exact render={() => (<Welcome />)} />
+            <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+            <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+            <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+          </Switch>
+          <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+            <Toolbar>
+              <NavBottom />
+            </Toolbar>
+          </AppBar>
+        </Router>
       </Container>
     </ThemeProvider>
   );
@@ -210,11 +202,9 @@ export default App;
 
 
 
-/*
-Before passing props
+/*Note about typescript
+Before passing props to components
 Interface/class needs to be created (not sure about difference to typescript)
-The object needs to be marked at such class
-The Component needs to expect it by creating an interface for the prop
-In other words, it must name the prop and type it in the interface
-beforehand.
+to indicate the component expects that. At the same time, when passing the prop,
+also the prop needs to be marked of that type.
 */

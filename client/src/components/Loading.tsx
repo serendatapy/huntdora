@@ -10,8 +10,8 @@ export const Loading = () => {
     let loading = lottie.loadAnimation({
       container: document.querySelector("#loading-spinner")!,
       animationData: loadingSpinner,
-      renderer: "svg", // "canvas", "html"
-      loop: true, // boolean
+      renderer: "svg",
+      loop: true,
       autoplay: true,
     });
     return () => {
