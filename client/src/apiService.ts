@@ -3,8 +3,8 @@ import { Job } from './app-types'
 
 //const pathGetJob: string = `jobs/`;
 
-export async function getData(jobId: number | null, searchQuery: string | null):Promise<any> {
-  console.log('API CALL received:',jobId,searchQuery);
+export async function getData(jobId: number | null, searchQuery: string | null): Promise<any> {
+  console.log('API CALL received:', jobId, searchQuery);
   return jobId !== null ?
     await apiCall(`/jobs/${jobId}`) :
     await apiCall(`/search?keywords=${searchQuery}`);
@@ -13,8 +13,8 @@ export async function getData(jobId: number | null, searchQuery: string | null):
 export async function apiCall(
 
   path: string
-) :Promise<Job|Job[]> {
-  let jobs:Job|Job[] = [];
+): Promise<Job | Job[]> {
+  let jobs: Job | Job[] = [];
 
   try {
     const { data } = await reedAPI.get(path);
@@ -28,7 +28,7 @@ export async function apiCall(
     console.log("Data has been transformed!", jobs)
     return jobs;
   } catch (error) {
-    console.log('Error fetching!',error);
+    console.log('Error fetching!', error);
     return jobs;
   }
 }

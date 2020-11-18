@@ -32,14 +32,16 @@ import Toolbar from '@material-ui/core/Toolbar';
 //global themes can be set here
 let theme = createMuiTheme({
   typography: {
-
+    allVariants: {
+      color: '#1F2F47',
+    }
   },
   palette: {
     primary: {
       light: '#f5f3ed',
       main: '#f3f0e9',
       dark: '#aaa8a3',
-      contrastText: '#1f2f47',
+      contrastText: '#9fdcda',
     },
     secondary: {
       light: '#9fdcda',
@@ -48,7 +50,20 @@ let theme = createMuiTheme({
       contrastText: '#1f2f47',
     },
   },
+  overrides: {
+    MuiFilledInput: {
+      input: {
+       padding:'5px',
+      },
+    },
+    MuiInputBase: {
+      input: {
+       padding:'5px',
+      },
+    },
+  },
 })
+
 theme = responsiveFontSizes(theme);
 
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';

@@ -20,11 +20,11 @@ export const Loading = () => {
   }, []);
 
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" alignItems='center' style={{height:'70vh'}}>
       <Grid item>
         <div id="loading-spinner" style={{ width:'100%', height: 'auto', maxWidth:600  }} />
         <Typography align="center" variant="h6">
-          <div>Getting Information...</div>
+          <div>Getting Jobs...</div>
         </Typography>
       </Grid>
     </Grid>

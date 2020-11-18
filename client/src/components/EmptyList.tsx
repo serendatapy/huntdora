@@ -20,11 +20,11 @@ export const EmptyList = () => {
   }, []);
 
   return (
-    <Grid container justify="center">
+    <Grid container justify="center" alignItems='center' style={{height:'70vh'}}>
       <Grid item>
         <div id="puzzle-animation" style={{ width: 200, height: 200 }} />
         <Typography align="center" variant="h6">
-          <div>The list is empty</div>
+          <div>No Jobs Here!</div>
         </Typography>
       </Grid>
     </Grid>

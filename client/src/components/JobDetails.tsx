@@ -31,16 +31,16 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
 
   return (
     <Grid container direction={"column"}>
-      <Grid container>
+      <Grid container justify='space-between' style={{padding:'20px'}}>
         <Grid item xs={10}>
-          <Typography variant={'h6'} component="div">
+          <Typography variant={'h4'} component="div">
             {job?.jobTitle}
           </Typography>
         </Grid>
         <Grid item xs={2}>
           <Checkbox
-            icon={<LocalActivityOutlinedIcon />}
-            checkedIcon={<LocalActivityIcon />}
+            icon={<LocalActivityOutlinedIcon fontSize="large" />}
+            checkedIcon={<LocalActivityIcon fontSize="large" />}
             checked={saved}
             onChange={handleAddRemove}
             inputProps={{
@@ -50,7 +50,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
         </Grid>
       </Grid>
       <Grid item>
-        <Typography>
+        <Typography component="div" style={{padding:'0 20px 0 20px'}}>
           {parseJobDesc()}
         </Typography>
       </Grid>
