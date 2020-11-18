@@ -11,6 +11,8 @@ export class Job {
   date!: string;
   jobDescription!: string;
   applications!: number;
+  externalUrl!: string | null;
+  jobUrl!: string|null;
   saved:boolean = false;
 
   static parse(data: {}): Job {

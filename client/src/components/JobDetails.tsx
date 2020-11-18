@@ -7,6 +7,7 @@ import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
+import { Button } from '@material-ui/core';
 
 
 interface Props {
@@ -29,10 +30,19 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
     if (job.jobDescription) return parse(job.jobDescription)
   }
 
+  function handleApply(url:string|null) {
+    try{
+      if(url=== null) throw new Error('invalid url');
+      window.open(url);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
   return (
     <Grid container direction={"column"}>
-      <Grid container justify='space-between' style={{padding:'20px'}}>
-        <Grid item xs={10}>
+      <Grid container justify='space-between' style={{ padding: '20px' }}>
+        <Grid item xs={8}>
           <Typography variant={'h4'} component="div">
             {job?.jobTitle}
           </Typography>
@@ -48,9 +58,20 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
             }}
           />
         </Grid>
+        <Grid item xs={2}>
+          <Button
+            color="secondary"
+            aria-label="search"
+            component="button"
+            size='large'
+            onClick={()=>handleApply(job?.externalUrl || job?.jobUrl)}
+            variant="contained"
+          >Apply
+                  </Button>
+        </Grid>
       </Grid>
       <Grid item>
-        <Typography component="div" style={{padding:'0 20px 0 20px'}}>
+        <Typography component="div" style={{ padding: '0 20px 0 20px' }}>
           {parseJobDesc()}
         </Typography>
       </Grid>
