@@ -4,7 +4,7 @@ import { Job } from '../app-types';
 import parse from 'html-react-parser';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
-import { Checkbox, Grid, Typography, Button } from '@material-ui/core';
+import { Checkbox, Grid, Typography } from '@material-ui/core';
 import { NavBottomApply } from './NavBottomApply';
 
 interface Props {
