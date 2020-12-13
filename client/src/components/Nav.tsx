@@ -36,7 +36,7 @@ export const Nav: React.FC<Props> = (props) => {
   const { register, handleSubmit, control } = useForm<FormData>();
 
   useEffect(() => {
-    let nav = lottie.loadAnimation({
+    lottie.loadAnimation({
       container: document.querySelector("#load-welcome-nav")!,
       animationData: welcomeAnimationNav,
       renderer: "svg",

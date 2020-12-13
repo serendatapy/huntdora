@@ -9,7 +9,7 @@ import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import {Container, CssBaseline,AppBar,Toolbar} from '@material-ui/core/';
-import { makeStyles, ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
 
 
