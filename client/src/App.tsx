@@ -3,7 +3,6 @@ import './App.css';
 import { getData } from './apiService';
 import { Job } from './app-types';
 import { Nav } from './components/Nav';
-import { NavBottom } from './components/NavBottom'
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
@@ -174,7 +173,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
-      <Container maxWidth="sm" className="App">
+      <Container maxWidth="md" className="App">
         <Router>
           <AppBar color="primary">
             <Toolbar >
@@ -187,11 +186,11 @@ function App() {
             <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
             <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
           </Switch>
-          <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+          {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
             <Toolbar>
               <NavBottom />
             </Toolbar>
-          </AppBar>
+          </AppBar> */}
         </Router>
       </Container>
     </ThemeProvider>

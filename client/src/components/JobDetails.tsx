@@ -5,6 +5,7 @@ import parse from 'html-react-parser';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import { Checkbox, Grid, Typography, Button } from '@material-ui/core';
+import { NavBottomApply } from './NavBottomApply';
 
 interface Props {
   job: Job;
@@ -29,7 +30,8 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
     if (job.jobDescription) return parse(job.jobDescription)
   }
 
-  function handleApply(url: string | null): void {
+  function handleApply() {
+    let url: string | null = job?.externalUrl || job?.jobUrl;
     try {
       if (url === null) throw new Error('invalid url');
       window.open(url);
@@ -39,41 +41,32 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
   }
 
   return (
-    <Grid container direction={"column"}>
-      <Grid container justify='space-between' style={{ padding: '20px' }}>
-        <Grid item xs={8}>
-          <Typography variant={'h4'} component="div">
-            {job?.jobTitle}
+    <>
+      <Grid container direction={"column"}>
+        <Grid container justify='space-between' style={{ padding: '20px' }}>
+          <Grid item xs={10}>
+            <Typography variant={'h4'} component="div">
+              {job?.jobTitle}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Checkbox
+              icon={<LocalActivityOutlinedIcon fontSize="large" />}
+              checkedIcon={<LocalActivityIcon fontSize="large" />}
+              checked={saved}
+              onChange={handleAddRemove}
+              inputProps={{
+                'aria-label': 'secondary checkbox'
+              }} />
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Typography component="div" style={{ padding: '0 20px 0 20px' }}>
+            {parseJobDesc()}
           </Typography>
         </Grid>
-        <Grid item xs={2}>
-          <Checkbox
-            icon={<LocalActivityOutlinedIcon fontSize="large" />}
-            checkedIcon={<LocalActivityIcon fontSize="large" />}
-            checked={saved}
-            onChange={handleAddRemove}
-            inputProps={{
-              'aria-label': 'secondary checkbox'
-            }}
-          />
-        </Grid>
-        <Grid item xs={2}>
-          <Button
-            color="secondary"
-            aria-label="search"
-            component="button"
-            size='large'
-            onClick={() => handleApply(job?.externalUrl || job?.jobUrl)}
-            variant="contained"
-          >Apply
-                  </Button>
-        </Grid>
       </Grid>
-      <Grid item>
-        <Typography component="div" style={{ padding: '0 20px 0 20px' }}>
-          {parseJobDesc()}
-        </Typography>
-      </Grid>
-    </Grid>
+      <NavBottomApply handleApply={handleApply}/>
+    </>
   )
 }
