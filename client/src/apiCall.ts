@@ -5,15 +5,14 @@
  * OR local cors anywhere(preferred for speed)
  */
 // https://cors-anywhere.herokuapp.com/
-//use this address when implementing
+//const BASEURL: string = 'https://cors-anywhere.herokuapp.com/https://www.reed.co.uk/api/1.0';
+//use localhost when implementing
 //https://github.com/Rob--W/cors-anywhere#readme
 
 import axios from 'axios';
 
-//Resolve Type problem with username and API key
 const API_KEY:any = process.env.REACT_APP_API_KEY;
-//const BASEURL: string = 'https://cors-anywhere.herokuapp.com/https://www.reed.co.uk/api/1.0';
-const BASEURL: string = 'http://localhost:8080/https://www.reed.co.uk/api/1.0';
+const BASEURL:any = process.env.REACT_APP_BASE_URL;
 
 export const reedAPI = axios.create({
   auth: {
@@ -23,5 +22,3 @@ export const reedAPI = axios.create({
   baseURL: BASEURL,
   responseType: "json",
 })
-
-

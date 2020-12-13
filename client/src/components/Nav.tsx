@@ -9,6 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 import welcomeAnimationNav from "../loading-spinner.json";
 import lottie from 'lottie-web';
+import Avatar from '@material-ui/core/Avatar/Avatar';
+import logo from "../welcome-spinner-static.svg";
 
 type FormData = {
   query: string;
@@ -75,12 +77,13 @@ export const Nav: React.FC<Props> = (props) => {
 
 
   return (
-    <Grid container justify="space-evenly" spacing={1}>
+    <Grid container justify="center" spacing={1} direction="row" alignItems="center">
       <Grid item xs={2}>
-        <div id="load-welcome-nav" style={{ width: '100%', maxWidth: 100, height: 'auto' }} onClick={handleBackToWelcome} />
+        <Avatar src={logo} onClick={handleBackToWelcome}></Avatar>
+        {/* <img id="load-welcome-nav" src="http" style={{ width: '100%', maxWidth: 100, height: 'auto' }} onClick={handleBackToWelcome} /> */}
       </Grid>
       <Grid item xs={10}>
-        <Grid container justify="center" alignItems="center" direction="column">
+        <Grid container justify="flex-start" alignItems="center" direction="row">
 
           <Textfield
             onClick={handleClickOpenForm}

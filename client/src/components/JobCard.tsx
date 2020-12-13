@@ -18,17 +18,17 @@ interface Props {
  */
 const useStyles = makeStyles({
   root: {
-    transition: "transform 0.25s ease-in-out"
+    transition: "transform 0.3s ease-in-out"
   },
   cardHovered: {
-    transform: "scale(1.025)"
+    transform: "scale(1.02)"
   }
 });
 
 
 export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) => {
   const [saved, setsaved] = useState<boolean>(job.saved)
-  const [raised, setraised] = useState({ raised: false, shadow: 10 })
+  const [raised, setraised] = useState({ raised: false, shadow: 5 })
 
   let history = useHistory();
   const classes = useStyles();
@@ -49,8 +49,8 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
     <Card
       className={classes.root}
       classes={{ root: raised.raised ? classes.cardHovered : "" }}
-      onMouseOver={() => setraised({ raised: true, shadow: 20 })}
-      onMouseOut={() => setraised({ raised: false, shadow: 10 })}
+      onMouseOver={() => setraised({ raised: true, shadow: 8 })}
+      onMouseOut={() => setraised({ raised: false, shadow: 5 })}
       raised={raised.raised}
       elevation={raised.shadow}
     >
