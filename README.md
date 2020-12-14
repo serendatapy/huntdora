@@ -29,8 +29,11 @@ The user can save the jobs they're interested in and apply to them.
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
 - Authentication and DB to store user information
 
-## Running Huntdora Locally
+## Running Huntdora
+The easiet way is to visit the [live website](https://huntdora.netlify.app/)
+You can also install the PWA for improved performance
 
+Alternatively, to run it locally, clone/download the repo:
 From the client folder
 
 ```
