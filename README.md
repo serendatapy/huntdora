@@ -50,4 +50,4 @@ https://cors-anywhere.herokuapp.com/https://www.reed.co.uk/api/1.0
 
 ## Room for improvement
 
-Checkout [Github Issues](https://github.com/serendatapy/huntdora/issues)
+Checkout [Github Issues](https://github.com/serendatapy/huntdora/issues), in particular [Issue #23](https://github.com/serendatapy/huntdora/issues/23) which holds an overview
