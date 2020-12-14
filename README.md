@@ -8,9 +8,9 @@ Searching for a job can be tough and demoralising. Huntdora is a job searching a
 <img align="center" src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/5abfbec86fcf93acb12125081ef3fbb809f38e42.gif"></img>
 </p>
 At the moment Huntdora has reached it's MVP stage and allows the user to search for real jobs, using a job API.  
-
+<p align="center">
 <img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.36.png"></img>
-
+</p>
 The user can save the jobs they're interested in and apply to them. 
 
 ## Tech Stack
