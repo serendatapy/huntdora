@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import puzzleAnimation from "../33692-puzzle-animation.json";
+import jobsNotFound from "../animations/jobs-not-found.json";
 import lottie from 'lottie-web';
 import { Typography,Grid } from '@material-ui/core';
 
@@ -8,7 +8,7 @@ export const EmptyList = () => {
   useEffect(() => {
     let empty = lottie.loadAnimation({
       container: document.querySelector("#puzzle-animation")!,
-      animationData: puzzleAnimation,
+      animationData: jobsNotFound,
       renderer: "svg",
       loop: false,
       autoplay: true,

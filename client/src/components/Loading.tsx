@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import loadingSpinner from "../loading-spinner.json";
+import loadingSpinner from "../animations/loading-spinner.json";
 import lottie from 'lottie-web';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
