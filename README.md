@@ -1,6 +1,7 @@
 # [Huntdora](https://huntdora.netlify.app/)
 
 ## What is it
+<img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.14.png"></img>
 
 Searching for a job can be tough and demoralising. Huntdora is a job searching app which focuses on uplifting the job seeker through design and user experience, as well as through its utility.
 <p align="center">
@@ -9,7 +10,6 @@ Searching for a job can be tough and demoralising. Huntdora is a job searching a
 At the moment Huntdora has reached it's MVP stage and allows the user to search for real jobs, using a job API.  
 
 <img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.36.png"></img>
-<img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.14.png"></img>
 
 The user can save the jobs they're interested in and apply to them. 
 
