@@ -7,7 +7,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
 import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar/Avatar';
-import logo from "../welcome-spinner-static.svg";
+import logo from "../animations/welcome-spinner-static.svg";
 
 type FormData = {
   query: string;
