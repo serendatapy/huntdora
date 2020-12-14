@@ -18,7 +18,7 @@ The user can save the jobs they're interested in and apply to them.
 ```
 ♦ React JS
 ♦ Typescript
-♦ Netlify Deploy
+♦ PWA & Netlify Deployment
 ♦ Material-UI
 ♦ External API
 ♦ GraphQL
