@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import Textfield from '@material-ui/core/TextField';
@@ -7,8 +6,6 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
 import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
-import welcomeAnimationNav from "../loading-spinner.json";
-import lottie from 'lottie-web';
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../welcome-spinner-static.svg";
 
@@ -34,16 +31,6 @@ export const Nav: React.FC<Props> = (props) => {
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
   const { register, handleSubmit, control } = useForm<FormData>();
-
-  useEffect(() => {
-    lottie.loadAnimation({
-      container: document.querySelector("#load-welcome-nav")!,
-      animationData: welcomeAnimationNav,
-      renderer: "svg",
-      loop: false,
-      autoplay: true,
-    });
-  }, []);
 
   const handleBackToWelcome = (): void => {
     history.push('/')
@@ -80,7 +67,6 @@ export const Nav: React.FC<Props> = (props) => {
     <Grid container justify="center" spacing={1} direction="row" alignItems="center">
       <Grid item xs={2}>
         <Avatar src={logo} onClick={handleBackToWelcome}></Avatar>
-        {/* <img id="load-welcome-nav" src="http" style={{ width: '100%', maxWidth: 100, height: 'auto' }} onClick={handleBackToWelcome} /> */}
       </Grid>
       <Grid item xs={10}>
         <Grid container justify="flex-start" alignItems="center" direction="row">
