@@ -18,10 +18,10 @@ The user can save the jobs they're interested in and apply to them.
 ```
 ♦ React JS
 ♦ Typescript
-♦ PWA & Netlify Deployment
+♦ Progressive Web App (PWA) & Netlify Deployment
+♦ Heroku Express Server
 ♦ Material-UI
-♦ External API
-♦ GraphQL
+♦ External REST API 
 ```
 ## Upcoming Features
 
