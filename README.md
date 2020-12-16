@@ -19,7 +19,7 @@ The user can save the jobs they're interested in and apply to them.
 ♦ React JS
 ♦ Typescript
 ♦ Progressive Web App (PWA) & Netlify Deployment
-♦ Heroku Express Server
+♦ [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
 ♦ Material-UI
 ♦ External REST API 
 ```
