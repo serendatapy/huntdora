@@ -24,14 +24,13 @@ The user can save the jobs they're interested in and apply to them.
 ♦ External REST API 
 ```
 ## Upcoming Features
-
-- Own Backend to improve Stability and Performance and implement caching
+- Own Backend to improve Stability and Performance
+- Authentication and DB to store user's favorite lists + preferences
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
-- Authentication and DB to store user information
 
 ## Running Huntdora
 The easiet way is to visit the [live website](https://huntdora.netlify.app/)
-You can also install the PWA for improved performance
+You can also install the Progressive Web App (PWA) for improved performance by using a Chrome Browser on any device
 
 Alternatively, to run it locally, clone/download the repo:
 From the client folder
@@ -52,5 +51,4 @@ https://cors-anywhere.herokuapp.com/https://www.reed.co.uk/api/1.0
 ```
 
 ## Room for improvement
-
 Checkout [Github Issues](https://github.com/serendatapy/huntdora/issues), in particular [Issue #23](https://github.com/serendatapy/huntdora/issues/23) which holds an overview
