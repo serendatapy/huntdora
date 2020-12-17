@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getData } from './apiService';
+import { getData, getFavorites } from './apiService';
 import { Job } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
@@ -8,7 +8,7 @@ import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import {Container, CssBaseline,AppBar,Toolbar} from '@material-ui/core/';
+import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 
 
@@ -95,9 +95,20 @@ function App() {
    *Load jobs on startup
    */
   useEffect(() => {
-    const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
+    let email = 'alex@alex.com'
+    const fetchFavorites = async () => {
+      console.log('Sending email', email)
+      const results: any = await getFavorites(email);
+      console.log('Saving Favorite State:', results)
+      setSavedJobs(results);
+    }
+    fetchFavorites();
   }, [])
+
+  // useEffect(() => {
+  //   const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+  //   if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
+  // }, [])
   /**
    *update jobs on save
    */

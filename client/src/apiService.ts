@@ -8,22 +8,27 @@ export async function getData(jobId: number | null, searchQuery: string | null):
     await apiCall(`/search/search?keywords=${searchQuery}`);
 }
 
+export async function getFavorites(email: string): Promise<any> {
+  console.log('Fetching from DB:', email);
+  return await apiCall(`/favorites/${email}`);
+}
+
 /**
  * Look at axios cancel token
  * documentation for better request management
  */
 export async function apiCall(
+  path: string): Promise<Job | Job[]> {
 
-  path: string
-): Promise<Job | Job[]> {
   let jobs: Job | Job[] = [];
-
   try {
     const { data } = await reedAPI.get(path);
     console.log("Fetched", data)
 
     if (data.results) {
       jobs = data.results.map((job: any) => Job.parse(job))
+    } else if (data.favorites){
+      jobs = [...data.favorites];
     } else {
       jobs = Job.parse(data);
     }
