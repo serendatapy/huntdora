@@ -7,11 +7,11 @@ Searching for a job can be tough and demoralising. Huntdora is a job searching a
 <p align="center">
 <img align="center" src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/5abfbec86fcf93acb12125081ef3fbb809f38e42.gif"></img>
 </p>
-At the moment Huntdora has reached it's MVP stage and allows the user to search for real jobs, using a job API.  
+Huntdora is a fully responsive Progressive Web App (PWA) and it allows the user to search for real jobs in the UK using various filters. It achieves this by connecting to a Job API for the data. 
 <p align="center">
 <img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.36.png"></img>
 </p>
-The user can save the jobs they're interested in and apply to them. 
+At the moment, the user can save the jobs they're interested in and apply to them. The app stores the choices of the user in the device's memory, so that when the app is closed and reopened, the preferences will still be saved.
 
 ## Tech Stack
 
@@ -24,13 +24,15 @@ The user can save the jobs they're interested in and apply to them.
 ♦ External REST API 
 ```
 ## Upcoming Features
-- Own Backend to improve Stability and Performance
+- Own Backend on heroku to improve Stability and Performance
 - Authentication and DB to store user's favorite lists + preferences
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
+- More personalization and support for the job seeker
 
 ## Running Huntdora
 The easiet way is to visit the [live website](https://huntdora.netlify.app/)
-You can also install the Progressive Web App (PWA) for improved performance by using a Chrome Browser on any device
+
+You can also **install** the Progressive Web App (PWA) from the website for improved performance by using a Chrome Browser on any device. The app will put an icon on the desktop, which can be uninstalled regularly like any other app.
 
 Alternatively, to run it locally, clone/download the repo:
 From the client folder
