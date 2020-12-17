@@ -14,16 +14,21 @@ export async function getFavorites(email: string): Promise<any> {
 }
 
 
-/*UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)
-export async function getFavorites(email: string): Promise<any> {
-  console.log('Fetching from DB:', email);
-  return await apiCall(`/favorites/${email}`);
+/*UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)*/
+export async function updateFavorites(email: string, newFavorites: [] | Job[]): Promise<any> {
+  console.log('Updating DB:', email, newFavorites);
+  try {
+    let response = await reedAPI.post(`/favorites/${email}`, { email: email, favorites: newFavorites })
+    console.log('Update Response:', response);
+  } catch (error) {
+    console.log('UPDATE ERROR: ',error);
+  }
 }
 
-*/
 /**
  * Look at axios cancel token
- * documentation for better request management
+ * documentation for better request management.
+ * Does this need to be exportted?
  */
 export async function apiCall(
   path: string): Promise<Job | Job[]> {
@@ -35,7 +40,7 @@ export async function apiCall(
 
     if (data.results) {
       jobs = data.results.map((job: any) => Job.parse(job))
-    } else if (data.favorites){
+    } else if (data.favorites) {
       jobs = [...data.favorites];
     } else {
       jobs = Job.parse(data);

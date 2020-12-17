@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getData, getFavorites } from './apiService';
+import { getData, getFavorites, updateFavorites } from './apiService';
 import { Job } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
@@ -92,7 +92,7 @@ function App() {
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   *Load jobs on startup IF USER AUTHENTICATED!
+   *LOAD JOBS on startup IF USER AUTHENTICATED!
    */
   useEffect(() => {
     let email = 'alex@alex.com'
@@ -111,11 +111,20 @@ function App() {
   // }, [])
 
   /**
-   *update jobs on save
+   *UPDATE JOBS on save
    */
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
+    let email = 'alex@alex.com'
+    const changeFavorites = async () => {
+      console.log('Updating DB', email, savedJobs)
+      const results: any = await updateFavorites(email, savedJobs);
+      console.log('Response:',results);
+    }
+    changeFavorites();
   }, [savedJobs])
+  // useEffect(() => {
+  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
+  // }, [savedJobs])
 
   /**
  *
@@ -176,9 +185,11 @@ function App() {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
+  /*This is done to make sure that a savedList job is in sync with the same job in jobList */
   function updateJobInList(jobId: number) {
     const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
     if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
+
     setJobsList([...jobsList]);
   }
 
