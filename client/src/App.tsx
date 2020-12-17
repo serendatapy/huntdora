@@ -92,7 +92,7 @@ function App() {
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   *Load jobs on startup
+   *Load jobs on startup IF USER AUTHENTICATED!
    */
   useEffect(() => {
     let email = 'alex@alex.com'
