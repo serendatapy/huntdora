@@ -112,6 +112,12 @@ function App() {
 
   /**
    *UPDATE JOBS on save
+   * Note: At the moment if the connection fails, the actions on the
+   * user still take place, and there is no feedback of disconnection
+   * or data being out of sync. The best thing would be to sync
+   * a local storage, rather than through the interface, so that
+   * when an update occurs, as soon as connection is back
+   * things will sync
    */
   useEffect(() => {
     let email = 'alex@alex.com'
