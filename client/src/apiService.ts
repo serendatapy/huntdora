@@ -13,6 +13,14 @@ export async function getFavorites(email: string): Promise<any> {
   return await apiCall(`/favorites/${email}`);
 }
 
+
+/*UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)
+export async function getFavorites(email: string): Promise<any> {
+  console.log('Fetching from DB:', email);
+  return await apiCall(`/favorites/${email}`);
+}
+
+*/
 /**
  * Look at axios cancel token
  * documentation for better request management

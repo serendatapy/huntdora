@@ -109,6 +109,7 @@ function App() {
   //   const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
   //   if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
   // }, [])
+
   /**
    *update jobs on save
    */
