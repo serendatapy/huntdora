@@ -5,7 +5,7 @@ export async function getData(jobId: number | null, searchQuery: string | null):
   console.log('API CALL received:', jobId, searchQuery);
   return jobId !== null ?
     await apiCall(`/jobs/${jobId}`) :
-    await apiCall(`/search?keywords=${searchQuery}`);
+    await apiCall(`/search/search?keywords=${searchQuery}`);
 }
 
 /**
