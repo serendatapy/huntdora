@@ -9,6 +9,8 @@ import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, Inp
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../animations/welcome-spinner-static.svg";
 
+import AuthenticationButton from "./AuthenticationBtn";
+
 type FormData = {
   query: string;
   locationName: string;
@@ -68,7 +70,7 @@ export const Nav: React.FC<Props> = (props) => {
       <Grid item xs={2}>
         <Avatar src={logo} onClick={handleBackToWelcome}></Avatar>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={8}>
         <Grid container justify="flex-start" alignItems="center" direction="row">
 
           <Textfield
@@ -205,6 +207,9 @@ export const Nav: React.FC<Props> = (props) => {
             </List>
           </Dialog>
         </Grid>
+      </Grid>
+      <Grid item xs={2}>
+        <AuthenticationButton />
       </Grid>
     </Grid>
   )

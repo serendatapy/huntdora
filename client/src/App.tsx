@@ -10,8 +10,8 @@ import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-
-
+import Auth0ProviderWithHistory from "./auth/Auth0-provider-with-history";
+import { useAuth0 } from "@auth0/auth0-react";
 
 /*Example of custom styles that can be applied to a component (a custom button for example)
 Follow docs for specific properties to use
@@ -67,6 +67,11 @@ theme = responsiveFontSizes(theme);
 const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
+
+  /***
+   * AUTH 0
+   */
+  const { isLoading } = useAuth0();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [jobsList, setJobsList] = useState<Job[] | []>([]);
@@ -124,7 +129,7 @@ function App() {
     const changeFavorites = async () => {
       console.log('Updating DB', email, savedJobs)
       const results: any = await updateFavorites(email, savedJobs);
-      console.log('Response:',results);
+      console.log('Response:', results);
     }
     changeFavorites();
   }, [savedJobs])
@@ -199,28 +204,35 @@ function App() {
     setJobsList([...jobsList]);
   }
 
+  /***
+   * AUTH 0
+   * Get better loading animation
+   * Straighten Existing one!
+   */
+  if(isLoading) return (<Loading />)
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
       <Container maxWidth="md" className="App">
-        <Router>
-          <AppBar color="primary">
-            <Toolbar >
-              <Nav addQuery={addQuery} />
-            </Toolbar>
-          </AppBar>
-          <Switch>
-            <Route path='/' exact render={() => (<Welcome />)} />
-            <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-            <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-            <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-          </Switch>
-          {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+
+            <AppBar color="primary">
+              <Toolbar >
+                <Nav addQuery={addQuery} />
+              </Toolbar>
+            </AppBar>
+            <Switch>
+              <Route path='/' exact render={() => (<Welcome />)} />
+              <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+              <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+              <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+            </Switch>
+            {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
             <Toolbar>
               <NavBottom />
             </Toolbar>
           </AppBar> */}
-        </Router>
+
       </Container>
     </ThemeProvider>
   );
