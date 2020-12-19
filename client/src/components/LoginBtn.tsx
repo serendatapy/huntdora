@@ -6,7 +6,7 @@ const LoginButton = () => {
   return (
     <button
       className="btn btn-primary btn-block"
-      onClick={() => loginWithRedirect()}
+      onClick={() => loginWithRedirect({ appState: { targetUrl: window.location.pathname } })}
     >
       Log In
     </button>

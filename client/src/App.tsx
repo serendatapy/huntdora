@@ -10,8 +10,8 @@ import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import Auth0ProviderWithHistory from "./auth/Auth0-provider-with-history";
 import { useAuth0 } from "@auth0/auth0-react";
+import ProtectedRoute from './auth/ProtectedRoute';
 
 /*Example of custom styles that can be applied to a component (a custom button for example)
 Follow docs for specific properties to use
@@ -64,7 +64,7 @@ let theme = createMuiTheme({
 })
 theme = responsiveFontSizes(theme);
 
-const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
+const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
@@ -99,21 +99,31 @@ function App() {
   /**
    *LOAD JOBS on startup IF USER AUTHENTICATED!
    */
-  useEffect(() => {
-    let email = 'alex@alex.com'
-    const fetchFavorites = async () => {
-      console.log('Sending email', email)
-      const results: any = await getFavorites(email);
-      console.log('Saving Favorite State:', results)
-      setSavedJobs(results);
-    }
-    fetchFavorites();
-  }, [])
+  const { user } = useAuth0();
 
-  // useEffect(() => {
-  //   const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
-  //   if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
-  // }, [])
+  useEffect(() => {
+
+    if (user) {
+      console.log('User LOGGED IN:', user);
+      let { email } = user;
+      const fetchFavorites = async () => {
+        console.log('Sending email', email)
+        const results: any = await getFavorites(email);
+        console.log('Saving Favorite State:', results)
+        setSavedJobs(results);
+      }
+      fetchFavorites();
+    }
+  }, [user])
+
+  /**
+   * If user hasn't logged out and there are jobs saved, get them from
+   * local storage.
+   */
+  useEffect(() => {
+     const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+     if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
+  }, [])
 
   /**
    *UPDATE JOBS on save
@@ -125,17 +135,21 @@ function App() {
    * things will sync
    */
   useEffect(() => {
-    let email = 'alex@alex.com'
-    const changeFavorites = async () => {
-      console.log('Updating DB', email, savedJobs)
-      const results: any = await updateFavorites(email, savedJobs);
-      console.log('Response:', results);
+    if (user) {
+      console.log('User LOGGED IN:', user);
+      let { email } = user;
+      const changeFavorites = async () => {
+        console.log('Updating DB', email, savedJobs)
+        const results: any = await updateFavorites(email, savedJobs);
+        console.log('Response:', results);
+      }
+      changeFavorites();
     }
-    changeFavorites();
-  }, [savedJobs])
-  // useEffect(() => {
-  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
-  // }, [savedJobs])
+  }, [savedJobs]);
+
+  useEffect(() => {
+     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
+  }, [jobsList])
 
   /**
  *
@@ -209,25 +223,27 @@ function App() {
    * Get better loading animation
    * Straighten Existing one!
    */
-  if(isLoading) return (<Loading />)
+  if (isLoading) return (<Loading />)
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
       <Container maxWidth="md" className="App">
 
-            <AppBar color="primary">
-              <Toolbar >
-                <Nav addQuery={addQuery} />
-              </Toolbar>
-            </AppBar>
-            <Switch>
-              <Route path='/' exact render={() => (<Welcome />)} />
-              <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-              <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-              <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-            </Switch>
-            {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
+        <AppBar color="primary">
+          <Toolbar >
+            <Nav addQuery={addQuery} />
+          </Toolbar>
+        </AppBar>
+        <Switch>
+          <Route path='/' exact render={() => (<Welcome />)} />
+          <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+          {/*
+          // @ts-ignore*/}
+          <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+        </Switch>
+        {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
             <Toolbar>
               <NavBottom />
             </Toolbar>

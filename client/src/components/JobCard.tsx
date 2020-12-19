@@ -6,6 +6,7 @@ import {Checkbox,Typography,Card,CardContent,Grid} from '@material-ui/core';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface Props {
   job: Job;
@@ -30,6 +31,10 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
   const [saved, setsaved] = useState<boolean>(job.saved)
   const [raised, setraised] = useState({ raised: false, shadow: 5 })
 
+
+  const { user } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+
   let history = useHistory();
   const classes = useStyles();
 
@@ -38,11 +43,13 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
     history.push("/job-details") // eslint-disable-line no-restricted-globals
   }
   const handleAddRemove = ():void => {
-    console.log('Changing property', job.saved)
-    setsaved((saved) => !saved);
-    job.saved ? removeJob(job) : saveJob(job);
-    job.saved = !job.saved;
-    console.log('Changed property', job.saved)
+    if(user) {
+      console.log('Changing property', job.saved)
+      setsaved((saved) => !saved);
+      job.saved ? removeJob(job) : saveJob(job);
+      job.saved = !job.saved;
+      console.log('Changed property', job.saved)
+    } else loginWithRedirect()
   }
 
   return (

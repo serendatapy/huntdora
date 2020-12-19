@@ -13,7 +13,8 @@ const Auth0ProviderWithHistory: React.FC<Props> = ({ children }) => {
   const history = useHistory();
 
   const onRedirectCallback = (appState: any) => {
-    history.push(appState?.returnTo || window.location.pathname);
+    console.log('TAKING USERS BACK TO:', appState, window.location.pathname)
+    history.push(appState?.targetUrl || window.location.pathname);
   };
 
   return (
