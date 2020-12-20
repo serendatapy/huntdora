@@ -118,9 +118,10 @@ function App() {
 
   /**
    * If user hasn't logged out and there are jobs saved, get them from
-   * local storage.
+   * session storage.
    */
   useEffect(() => {
+     console.log('Fetching from SESSION STORAGE')
      const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
      if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
   }, [])
@@ -130,7 +131,7 @@ function App() {
    * Note: At the moment if the connection fails, the actions on the
    * user still take place, and there is no feedback of disconnection
    * or data being out of sync. The best thing would be to sync
-   * a local storage, rather than through the interface, so that
+   * a session storage, rather than through the interface, so that
    * when an update occurs, as soon as connection is back
    * things will sync
    */
@@ -148,6 +149,7 @@ function App() {
   }, [savedJobs]);
 
   useEffect(() => {
+     console.log('UPDATING SESSION STORAGE')
      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
   }, [jobsList])
 
@@ -182,13 +184,7 @@ function App() {
   }
 
   /*job saved from memory rather than refetched*/
-  async function saveJob(job: Job) {
-    if (!jobExists(job.jobId, savedJobs)) {
-      const newJob: Job = await getData(job.jobId, null);
-      newJob.saved = true;
-      setSavedJobs(savedJobs => [...savedJobs, newJob]);
-    }
-  }
+
 
   /*************************************
    *
@@ -201,22 +197,38 @@ function App() {
     updateJobInList(job.jobId);
   }
 
+  async function saveJob(job: Job) {
+    const jobToUpdate: Job | undefined = jobExists(job.jobId, savedJobs);
+    if (!jobToUpdate) {
+      const newJob: Job = await getData(job.jobId, null);
+      newJob.saved = true;
+      setSavedJobs(savedJobs => [...savedJobs, newJob]);
+      updateJobInList(job.jobId);
+    }
+  }
+
   function removeJob(job: Job) {
     setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
     updateJobInList(job.jobId);
+  }
+
+  /*This is done to make sure that a savedList job is in sync with the same job in jobList */
+  function updateJobInList(jobId: number) {
+    console.log('Changing Job: ',jobId);
+    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
+    console.log('Updating Job: ',jobToUpdate?.saved);
+    if (jobToUpdate !== undefined) {
+      jobToUpdate.saved = !jobToUpdate.saved;
+      console.log('Updated Job, saving new: ',jobToUpdate.saved);
+      setJobsList((jobsList) => [...jobsList]);
+    }
   }
 
   function jobExists(jobId: number, list: any[]): Job | undefined {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
-  /*This is done to make sure that a savedList job is in sync with the same job in jobList */
-  function updateJobInList(jobId: number) {
-    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
-    if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
 
-    setJobsList([...jobsList]);
-  }
 
   /***
    * AUTH 0
@@ -239,10 +251,10 @@ function App() {
           <Route path='/' exact render={() => (<Welcome />)} />
           <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
           <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-          {/*
-          // @ts-ignore*/}
           <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
         </Switch>
+          {/*
+          // @ts-ignore*/}
         {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
             <Toolbar>
               <NavBottom />

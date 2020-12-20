@@ -47,7 +47,7 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
       console.log('Changing property', job.saved)
       setsaved((saved) => !saved);
       job.saved ? removeJob(job) : saveJob(job);
-      job.saved = !job.saved;
+      //job.saved = !job.saved;
       console.log('Changed property', job.saved)
     } else loginWithRedirect()
   }
