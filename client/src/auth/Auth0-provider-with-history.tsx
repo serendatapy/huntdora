@@ -9,6 +9,7 @@ interface Props {
 const Auth0ProviderWithHistory: React.FC<Props> = ({ children }) => {
   const domain: any = process.env.REACT_APP_AUTH0_DOMAIN;
   const clientId: any = process.env.REACT_APP_AUTH0_CLIENT_ID;
+  const audience: any = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const history = useHistory();
 
@@ -23,6 +24,7 @@ const Auth0ProviderWithHistory: React.FC<Props> = ({ children }) => {
       clientId={clientId}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
+      audience={audience}
     >
       {children}
     </Auth0Provider>

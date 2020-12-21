@@ -71,7 +71,7 @@ function App() {
   /***
    * AUTH 0
    */
-  const { isLoading } = useAuth0();
+  const { isLoading, getAccessTokenSilently } = useAuth0();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [jobsList, setJobsList] = useState<Job[] | []>([]);
@@ -121,9 +121,9 @@ function App() {
    * session storage.
    */
   useEffect(() => {
-     console.log('Fetching from SESSION STORAGE')
-     const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-     if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
+    console.log('Fetching from SESSION STORAGE')
+    const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
   }, [])
 
   /**
@@ -139,18 +139,21 @@ function App() {
     if (user) {
       console.log('User LOGGED IN:', user);
       let { email } = user;
+
       const changeFavorites = async () => {
         console.log('Updating DB', email, savedJobs)
-        const results: any = await updateFavorites(email, savedJobs);
+        const token = await getAccessTokenSilently();
+        const results: any = await updateFavorites(email, savedJobs, token);
         console.log('Response:', results);
       }
       changeFavorites();
+
     }
   }, [savedJobs]);
 
   useEffect(() => {
-     console.log('UPDATING SESSION STORAGE')
-     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
+    console.log('UPDATING SESSION STORAGE')
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
   }, [jobsList])
 
   /**
@@ -214,12 +217,12 @@ function App() {
 
   /*This is done to make sure that a savedList job is in sync with the same job in jobList */
   function updateJobInList(jobId: number) {
-    console.log('Changing Job: ',jobId);
+    console.log('Changing Job: ', jobId);
     const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
-    console.log('Updating Job: ',jobToUpdate?.saved);
+    console.log('Updating Job: ', jobToUpdate?.saved);
     if (jobToUpdate !== undefined) {
       jobToUpdate.saved = !jobToUpdate.saved;
-      console.log('Updated Job, saving new: ',jobToUpdate.saved);
+      console.log('Updated Job, saving new: ', jobToUpdate.saved);
       setJobsList((jobsList) => [...jobsList]);
     }
   }
@@ -253,7 +256,7 @@ function App() {
           <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
           <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
         </Switch>
-          {/*
+        {/*
           // @ts-ignore*/}
         {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
             <Toolbar>

@@ -1,5 +1,6 @@
 import { reedAPI } from './apiCall';
-import { Job } from './app-types'
+import { Job } from './app-types';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export async function getData(jobId: number | null, searchQuery: string | null): Promise<any> {
   console.log('API CALL received:', jobId, searchQuery);
@@ -15,13 +16,17 @@ export async function getFavorites(email: string): Promise<any> {
 
 
 /*UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)*/
-export async function updateFavorites(email: string, newFavorites: [] | Job[]): Promise<any> {
+export async function updateFavorites(email: string, newFavorites: [] | Job[], token: any): Promise<any> {
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  }
   console.log('Updating DB:', email, newFavorites);
   try {
-    let response = await reedAPI.post(`/favorites/${email}`, { email: email, favorites: newFavorites })
+    let response = await reedAPI.post(`/favorites/`, { email: email, favorites: newFavorites }, { headers: headers })
     console.log('Update Response:', response);
   } catch (error) {
-    console.log('UPDATE ERROR: ',error);
+    console.log('UPDATE ERROR: ', error);
   }
 }
 
