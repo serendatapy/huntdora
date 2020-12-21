@@ -107,8 +107,9 @@ function App() {
       console.log('User LOGGED IN:', user);
       let { email } = user;
       const fetchFavorites = async () => {
+        const token = await getAccessTokenSilently();
         console.log('Sending email', email)
-        const results: any = await getFavorites(email);
+        const results: any = await getFavorites(email,token);
         console.log('Saving Favorite State:', results)
         setSavedJobs(results);
       }

@@ -9,9 +9,12 @@ export async function getData(jobId: number | null, searchQuery: string | null):
     await apiCall(`/search/search?keywords=${searchQuery}`);
 }
 
-export async function getFavorites(email: string): Promise<any> {
+export async function getFavorites(email: string, token: any): Promise<any> {
   console.log('Fetching from DB:', email);
-  return await apiCall(`/favorites/${email}`);
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  }
+  return await apiCall(`/favorites/${email}`, headers);
 }
 
 
@@ -36,12 +39,14 @@ export async function updateFavorites(email: string, newFavorites: [] | Job[], t
  * Does this need to be exportted?
  */
 export async function apiCall(
-  path: string): Promise<Job | Job[]> {
+  path: string, headers?:any): Promise<Job | Job[]> {
 
   let jobs: Job | Job[] = [];
   try {
-    const { data } = await reedAPI.get(path);
+    console.log("HEADERS:",headers)
+    const { data } = headers ? await reedAPI.get(path, { headers: headers }): await reedAPI.get(path);
     console.log("Fetched", data)
+
 
     if (data.results) {
       jobs = data.results.map((job: any) => Job.parse(job))
