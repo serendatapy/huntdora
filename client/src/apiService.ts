@@ -1,6 +1,5 @@
 import { reedAPI } from './apiCall';
 import { Job } from './app-types';
-import { useAuth0 } from "@auth0/auth0-react";
 
 export async function getData(jobId: number | null, searchQuery: string | null): Promise<any> {
   console.log('API CALL received:', jobId, searchQuery);

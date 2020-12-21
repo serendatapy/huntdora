@@ -30,8 +30,6 @@ export const EmptyList = () => {
       return user? <div>No Jobs Saved!</div> :
       <div>Please log in <br/>to save jobs across devices</div>
     }
-
-
   }
 
   return (
