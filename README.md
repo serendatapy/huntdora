@@ -16,18 +16,24 @@ At the moment, the user can save the jobs they're interested in and apply to the
 ## Tech Stack
 
 ```
+#### Frontend
 ♦ React JS
 ♦ Typescript
 ♦ Progressive Web App (PWA) & Netlify Deployment
 ♦ [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
 ♦ Material-UI
-♦ External REST API 
+♦ Auth0 Authentication
+#### Backend - [Huntdora Server Repository](https://github.com/serendatapy/huntdora-server)
+♦ Connection to Job Search API (reed.co.uk) 
+♦ Javascript
+♦ Express
+♦ Auth0 - JWT authentication
+♦ MongoDB
 ```
 ## Upcoming Features
-- Own Backend on heroku to improve Stability and Performance
-- Authentication and DB to store user's favorite lists + preferences
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
 - More personalization and support for the job seeker
+- Job Search Statistics
 
 ## Running Huntdora
 The easiet way is to visit the [live website](https://huntdora.netlify.app/)
