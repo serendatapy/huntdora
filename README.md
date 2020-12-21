@@ -17,18 +17,18 @@ At the moment, the user can save the jobs they're interested in and apply to the
 
 
 #### Frontend
-♦ React JS
-♦ Typescript
-♦ Progressive Web App (PWA) & Netlify Deployment
-♦ [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
-♦ Material-UI
-♦ Auth0 Authentication
+* React JS
+* Typescript
+* Progressive Web App (PWA) & Netlify Deployment
+* [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
+* Material-UI
+* Auth0 Authentication
 #### Backend - [Huntdora Server Repository](https://github.com/serendatapy/huntdora-server)
-♦ Connection to Job Search API (reed.co.uk) 
-♦ Javascript
-♦ Express
-♦ Auth0 - JWT authentication
-♦ MongoDB
+* Connection to Job Search API (reed.co.uk) 
+* Javascript
+* Express
+* Auth0 - JWT authentication
+* MongoDB
 
 ## Upcoming Features
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
