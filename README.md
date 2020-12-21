@@ -11,7 +11,7 @@ Huntdora is a fully responsive Progressive Web App (PWA) and it allows the user 
 <p align="center">
 <img src="https://github.com/serendatapy/huntdora/blob/master/readme_assets/Screen%20Shot%2013-12-2020%20at%2022.36.png"></img>
 </p>
-At the moment, the user can save the jobs they're interested in and apply to them. The app stores the choices of the user in the device's memory, so that when the app is closed and reopened, the preferences will still be saved.
+At the moment, the user can save the jobs they're interested in and apply to them. The app stores the choices of the authenticated user in a mongoDB database, so that the preferences can be accessed from anywhere.
 
 ## Tech Stack
 
@@ -22,7 +22,7 @@ At the moment, the user can save the jobs they're interested in and apply to the
 * Progressive Web App (PWA) & Netlify Deployment
 * [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
 * Material-UI
-* Auth0 Authentication
+* Auth0 Authentication + Social Login
 #### Backend - [Huntdora Server Repository](https://github.com/serendatapy/huntdora-server)
 * Connection to Job Search API (reed.co.uk) 
 * Javascript
