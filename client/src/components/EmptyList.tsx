@@ -23,7 +23,6 @@ export const EmptyList = () => {
   }, []);
 
   function emptyMessage() {
-    console.log('LOCATION',location.pathname);
     if(location.pathname === '/job-search'){
       return <div>No Results. <br/>Search for Jobs!</div>
     } else if(location.pathname === '/saved-jobs') {

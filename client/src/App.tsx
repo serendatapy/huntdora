@@ -13,19 +13,7 @@ import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui
 import { useAuth0 } from "@auth0/auth0-react";
 import ProtectedRoute from './auth/ProtectedRoute';
 
-/*Example of custom styles that can be applied to a component (a custom button for example)
-Follow docs for specific properties to use
- const useStyles = makeStyles({
-   root: {
-     background: 'linear-gradient(45deg, #333,#999)',
-     border: 0,
-     borderRadius: 15,
-     color: 'white',
-     padding: '0 30px'
-   }
- })*/
-
-//global themes can be set here
+//Global themes can be set here
 let theme = createMuiTheme({
   /*text styling */
   typography: {
@@ -68,22 +56,64 @@ const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
-  /***
-   * AUTH 0
-   */
-  const { isLoading, getAccessTokenSilently } = useAuth0();
-
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [jobsList, setJobsList] = useState<Job[] | []>([]);
   const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
   const [loading, setloading] = useState<boolean>(false)
-
+  const { isLoading, getAccessTokenSilently } = useAuth0();
+  const { user } = useAuth0();
+  /**
+   *LOAD JOBS on startup if any are saved on session storage
+   */
   useEffect(() => {
-    console.log('executing useEffect:', searchQuery);
+    const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
+  }, [])
+
+  /**
+   * When there is a user, or user changes, fetch their favorites if user
+   * is logged in.
+   * */
+  useEffect(() => {
+    if (user) {
+      let { email } = user;
+      const fetchFavorites = async () => {
+        const token = await getAccessTokenSilently();
+        const results: any = await getFavorites(email, token);
+        setSavedJobs(results);
+      }
+      fetchFavorites();
+    }
+  }, [user])
+
+  /**
+   *Whenever a job is saved/removed, update DB
+   */
+  useEffect(() => {
+    if (user) {
+      let { email } = user;
+      const changeFavorites = async () => {
+        const token = await getAccessTokenSilently();
+        const results: any = await updateFavorites(email, savedJobs, token);
+      }
+      changeFavorites();
+    }
+  }, [savedJobs]);
+
+  /**
+   * Save any fetched jobs to session storage - prevent loss after refresh
+   */
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
+  }, [jobsList])
+
+  /**
+   * Search - Whenever query is changed, fetch jobs
+   */
+  useEffect(() => {
     if (searchQuery !== '') {
       const fetchJobs = async () => {
-        console.log('Sending query', searchQuery)
         const results: any = await getData(null, searchQuery);
         results.forEach((job: Job) => {
           if (jobExists(job.jobId, savedJobs)) job.saved = !job.saved
@@ -93,74 +123,11 @@ function App() {
       }
       fetchJobs();
     }
-
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   *LOAD JOBS on startup IF USER AUTHENTICATED!
+   * Data from form is composed into a query for the API
    */
-  const { user } = useAuth0();
-
-  useEffect(() => {
-
-    if (user) {
-      console.log('User LOGGED IN:', user);
-      let { email } = user;
-      const fetchFavorites = async () => {
-        const token = await getAccessTokenSilently();
-        console.log('Sending email', email)
-        const results: any = await getFavorites(email,token);
-        console.log('Saving Favorite State:', results)
-        setSavedJobs(results);
-      }
-      fetchFavorites();
-    }
-  }, [user])
-
-  /**
-   * If user hasn't logged out and there are jobs saved, get them from
-   * session storage.
-   */
-  useEffect(() => {
-    console.log('Fetching from SESSION STORAGE')
-    const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
-  }, [])
-
-  /**
-   *UPDATE JOBS on save
-   * Note: At the moment if the connection fails, the actions on the
-   * user still take place, and there is no feedback of disconnection
-   * or data being out of sync. The best thing would be to sync
-   * a session storage, rather than through the interface, so that
-   * when an update occurs, as soon as connection is back
-   * things will sync
-   */
-  useEffect(() => {
-    if (user) {
-      console.log('User LOGGED IN:', user);
-      let { email } = user;
-
-      const changeFavorites = async () => {
-        console.log('Updating DB', email, savedJobs)
-        const token = await getAccessTokenSilently();
-        const results: any = await updateFavorites(email, savedJobs, token);
-        console.log('Response:', results);
-      }
-      changeFavorites();
-    }
-  }, [savedJobs]);
-
-  useEffect(() => {
-    console.log('UPDATING SESSION STORAGE')
-    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
-  }, [jobsList])
-
-  /**
- *
- * functions to query api
- */
-
   function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
     let { query, locationName, distanceFrom, minimumSalary } = data;
     const locationQuery = locationName ? `&locationName=${locationName}` : `&locationName=london`;
@@ -170,39 +137,42 @@ function App() {
     setSearchQuery(query + locationQuery + distanceQuery + salaryQuery);
   }
 
+  /**
+   * When fetch job details. Check if it's cached first.
+   */
   async function getJob(jobId: number) {
-    console.log('Checking if is saved...')
     const jobCached = jobExists(jobId, savedJobs);
     if (jobCached) {
       setjobDetails(jobCached)
-      console.log('Fetched Existing', jobCached)
     }
     else {
       setloading(true);
-      console.log('Fetching new job details');
       const newJob: Job = await getData(jobId, null)
       setjobDetails(newJob)
       setloading(false);
     }
   }
 
-  /*job saved from memory rather than refetched*/
-
-
   /*************************************
-   *
    * Function Utilities for handling
    * saved job data and state
    *************************************/
-
-  function saveJobFromDetails(job: Job) {
-    if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
-    updateJobInList(job.jobId);
+  /**
+   *  This function changes the saved property, and updated the job search list
+   */
+  function updateJobInList(jobId: number) {
+    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
+    if (jobToUpdate !== undefined) {
+      jobToUpdate.saved = !jobToUpdate.saved;
+      setJobsList((jobsList) => [...jobsList]);
+    }
   }
-
+  /**
+   * When job is saved from jobsearch list, the details are pre-fetched.
+   */
   async function saveJob(job: Job) {
-    const jobToUpdate: Job | undefined = jobExists(job.jobId, savedJobs);
-    if (!jobToUpdate) {
+    const savedJob: Job | undefined = jobExists(job.jobId, savedJobs);
+    if (!savedJob) {
       const newJob: Job = await getData(job.jobId, null);
       newJob.saved = true;
       setSavedJobs(savedJobs => [...savedJobs, newJob]);
@@ -210,41 +180,33 @@ function App() {
     }
   }
 
+  /**
+  * Save a job from the details page, sync with joblist. Don't add if already saved.
+  */
+  function saveJobFromDetails(job: Job) {
+    if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
+    updateJobInList(job.jobId);
+  }
+
+  /**
+  * Remove a job from saved, sync with joblist
+  */
   function removeJob(job: Job) {
     setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
     updateJobInList(job.jobId);
   }
-
-  /*This is done to make sure that a savedList job is in sync with the same job in jobList */
-  function updateJobInList(jobId: number) {
-    console.log('Changing Job: ', jobId);
-    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
-    console.log('Updating Job: ', jobToUpdate?.saved);
-    if (jobToUpdate !== undefined) {
-      jobToUpdate.saved = !jobToUpdate.saved;
-      console.log('Updated Job, saving new: ', jobToUpdate.saved);
-      setJobsList((jobsList) => [...jobsList]);
-    }
-  }
-
+  /**
+   * Check if a job exists in a given job list
+   */
   function jobExists(jobId: number, list: any[]): Job | undefined {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
-
-
-  /***
-   * AUTH 0
-   * Get better loading animation
-   * Straighten Existing one!
-   */
-  if (isLoading) return (<Loading />)
-
+  if (isLoading) return (<Loading />) /*This checks for auth0 loading state*/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
       <Container maxWidth="md" className="App">
-
         <AppBar color="primary">
           <Toolbar >
             <Nav addQuery={addQuery} />
@@ -256,26 +218,9 @@ function App() {
           <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
           <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
         </Switch>
-        {/*
-          // @ts-ignore*/}
-        {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
-            <Toolbar>
-              <NavBottom />
-            </Toolbar>
-          </AppBar> */}
-
       </Container>
     </ThemeProvider>
   );
 }
 
 export default App;
-
-
-
-/*Note about typescript
-Before passing props to components
-Interface/class needs to be created (not sure about difference to typescript)
-to indicate the component expects that. At the same time, when passing the prop,
-also the prop needs to be marked of that type.
-*/

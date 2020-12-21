@@ -15,7 +15,6 @@ interface Props {
 
 export const JobPosts: React.FC<Props> = (props) => {
 
-  console.log("We've got: ", props)
   return (
     <>
       <Grid container spacing={3}>

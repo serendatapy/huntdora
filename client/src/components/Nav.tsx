@@ -51,9 +51,7 @@ export const Nav: React.FC<Props> = (props) => {
 
   const onSubmit = (data: any): void => {
     handleCloseForm();
-    console.log('Submited: ', data);
     if (data.query || data.locationName || data.distanceFrom || data.minimumSalary) {
-      console.log('Submitting: ', data);
       props.addQuery(data);
       history.push('/job-search');
     }

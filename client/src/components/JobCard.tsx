@@ -26,11 +26,9 @@ const useStyles = makeStyles({
   }
 });
 
-
 export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) => {
   const [saved, setsaved] = useState<boolean>(job.saved)
   const [raised, setraised] = useState({ raised: false, shadow: 5 })
-
 
   const { user } = useAuth0();
   const { loginWithRedirect } = useAuth0();
@@ -44,11 +42,8 @@ export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) =>
   }
   const handleAddRemove = ():void => {
     if(user) {
-      console.log('Changing property', job.saved)
       setsaved((saved) => !saved);
       job.saved ? removeJob(job) : saveJob(job);
-      //job.saved = !job.saved;
-      console.log('Changed property', job.saved)
     } else loginWithRedirect()
   }
 

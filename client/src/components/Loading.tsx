@@ -22,7 +22,6 @@ export const Loading = () => {
   }, []);
 
   function loadingMessage() {
-    console.log('LOCATION',location.pathname);
     if(location.pathname === '/job-search' || location.pathname === '/job-search'){
       return <div>Getting Jobs...</div>
     } else {
