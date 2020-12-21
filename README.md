@@ -15,7 +15,7 @@ At the moment, the user can save the jobs they're interested in and apply to the
 
 ## Tech Stack
 
-```
+
 #### Frontend
 ♦ React JS
 ♦ Typescript
@@ -29,7 +29,7 @@ At the moment, the user can save the jobs they're interested in and apply to the
 ♦ Express
 ♦ Auth0 - JWT authentication
 ♦ MongoDB
-```
+
 ## Upcoming Features
 - Ability to mark jobs as unwanted, to avoid seeing them in future searches
 - More personalization and support for the job seeker
