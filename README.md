@@ -48,14 +48,13 @@ yarn install
 yarn start
 ```
 
-In the .env.development.local file you'll need a reed.co.uk key, and to insert the base URL using
+In the .env.development.local file you'll need the following environment variables. You'll also need the [Huntdora Server](https://github.com/serendatapy/huntdora-server), with the corresponding environment variables. 
 
 ```
-REACT_APP_API_KEY = your-personal-api-key
-if you're running your own proxy
-REACT_APP_BASE_URL = http://localhost:8080/https://www.reed.co.uk/api/1.0
-Or using online cors anywhere proxy
-https://cors-anywhere.herokuapp.com/https://www.reed.co.uk/api/1.0
+REACT_APP_BASE_URL = (address of reed api enabled server)
+REACT_APP_AUTH0_AUDIENCE= (obtain from creating your app on auth 0)
+REACT_APP_AUTH0_DOMAIN=(obtain from creating your app on auth 0)
+REACT_APP_AUTH0_CLIENT_ID=(obtain from creating your app on auth 0)
 ```
 
 ## Room for improvement
