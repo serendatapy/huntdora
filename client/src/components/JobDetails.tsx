@@ -40,6 +40,11 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
     }
   }
 
+  function salary() {
+    if(job.minimumSalary) return `Salary: £${job?.minimumSalary}-${job?.maximumSalary} ${job.salaryType}`
+    else return `Salary: Negotiable`
+  }
+
   return (
     <>
       <Grid container direction={"column"}>
@@ -47,6 +52,15 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
           <Grid item xs={10}>
             <Typography variant={'h4'} component="div">
               {job?.jobTitle}
+            </Typography>
+            <Typography component="div" style={{padding:'10px 0 0 0'}}>
+              {`Company: ${job?.employerName}`}
+            </Typography>
+            <Typography component="div" >
+              {`Location: ${job?.locationName}`}
+            </Typography>
+            <Typography component="div" >
+              {salary()}
             </Typography>
           </Grid>
           <Grid item xs={2}>

@@ -14,6 +14,7 @@ export class Job {
   externalUrl!: string | null;
   jobUrl!: string|null;
   saved:boolean = false;
+  salaryType?: string|null;
 
   static parse(data: {}): Job {
     const job: Job = Object.assign(new Job(), data);
