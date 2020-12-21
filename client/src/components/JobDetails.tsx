@@ -61,7 +61,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
           </Grid>
         </Grid>
         <Grid item>
-          <Typography component="div" style={{ padding: '0 20px 0 20px' }}>
+          <Typography component="div" style={{ padding: '0 20px 0 20px', marginBottom: '100px' }}>
             {parseJobDesc()}
           </Typography>
         </Grid>
