@@ -94,6 +94,7 @@ export const Nav: React.FC<Props> = (props) => {
                   <SearchIcon fontSize='large' />
                 </IconButton>
               ),
+              readOnly: true,
             }}
           />
 
@@ -118,6 +119,7 @@ export const Nav: React.FC<Props> = (props) => {
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
+
                   />
                 </ListItem>
                 <ListItem>
