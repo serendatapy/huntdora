@@ -7,11 +7,12 @@ import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { useAuth0 } from "@auth0/auth0-react";
-import ProtectedRoute from './auth/ProtectedRoute';
+//import ProtectedRoute from './auth/ProtectedRoute';
 
 //Global themes can be set here
 let theme = createMuiTheme({
@@ -85,6 +86,7 @@ function App() {
       }
       fetchFavorites();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   /**
@@ -95,10 +97,12 @@ function App() {
       let { email } = user;
       const changeFavorites = async () => {
         const token = await getAccessTokenSilently();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const results: any = await updateFavorites(email, savedJobs, token);
       }
       changeFavorites();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedJobs]);
 
   /**

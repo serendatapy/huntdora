@@ -22,6 +22,7 @@ export async function updateFavorites(email: string, newFavorites: [] | Job[], t
     Authorization: `Bearer ${token}`,
   }
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let response = await reedAPI.post(`/favorites/`, { email: email, favorites: newFavorites }, { headers: headers })
   } catch (error) {
     console.log('UPDATE ERROR: ', error);
