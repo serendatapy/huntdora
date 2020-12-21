@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getData } from './apiService';
+import { getData, getFavorites, updateFavorites } from './apiService';
 import { Job } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
@@ -8,24 +8,12 @@ import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import {Container, CssBaseline,AppBar,Toolbar} from '@material-ui/core/';
+import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
+import { useAuth0 } from "@auth0/auth0-react";
+import ProtectedRoute from './auth/ProtectedRoute';
 
-
-
-/*Example of custom styles that can be applied to a component (a custom button for example)
-Follow docs for specific properties to use
- const useStyles = makeStyles({
-   root: {
-     background: 'linear-gradient(45deg, #333,#999)',
-     border: 0,
-     borderRadius: 15,
-     color: 'white',
-     padding: '0 30px'
-   }
- })*/
-
-//global themes can be set here
+//Global themes can be set here
 let theme = createMuiTheme({
   /*text styling */
   typography: {
@@ -64,7 +52,7 @@ let theme = createMuiTheme({
 })
 theme = responsiveFontSizes(theme);
 
-const LOCAL_STORAGE_KEY = 'huntdora.savedJobs';
+const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
@@ -73,12 +61,59 @@ function App() {
   const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
   const [loading, setloading] = useState<boolean>(false)
-
+  const { isLoading, getAccessTokenSilently } = useAuth0();
+  const { user } = useAuth0();
+  /**
+   *LOAD JOBS on startup if any are saved on session storage
+   */
   useEffect(() => {
-    console.log('executing useEffect:', searchQuery);
+    const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
+  }, [])
+
+  /**
+   * When there is a user, or user changes, fetch their favorites if user
+   * is logged in.
+   * */
+  useEffect(() => {
+    if (user) {
+      let { email } = user;
+      const fetchFavorites = async () => {
+        const token = await getAccessTokenSilently();
+        const results: any = await getFavorites(email, token);
+        setSavedJobs(results);
+      }
+      fetchFavorites();
+    }
+  }, [user])
+
+  /**
+   *Whenever a job is saved/removed, update DB
+   */
+  useEffect(() => {
+    if (user) {
+      let { email } = user;
+      const changeFavorites = async () => {
+        const token = await getAccessTokenSilently();
+        const results: any = await updateFavorites(email, savedJobs, token);
+      }
+      changeFavorites();
+    }
+  }, [savedJobs]);
+
+  /**
+   * Save any fetched jobs to session storage - prevent loss after refresh
+   */
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
+  }, [jobsList])
+
+  /**
+   * Search - Whenever query is changed, fetch jobs
+   */
+  useEffect(() => {
     if (searchQuery !== '') {
       const fetchJobs = async () => {
-        console.log('Sending query', searchQuery)
         const results: any = await getData(null, searchQuery);
         results.forEach((job: Job) => {
           if (jobExists(job.jobId, savedJobs)) job.saved = !job.saved
@@ -88,28 +123,11 @@ function App() {
       }
       fetchJobs();
     }
-
   }, [searchQuery]);// eslint-disable-line react-hooks/exhaustive-deps
 
   /**
-   *Load jobs on startup
+   * Data from form is composed into a query for the API
    */
-  useEffect(() => {
-    const sJobsJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (sJobsJSON != null) setSavedJobs(JSON.parse(sJobsJSON));
-  }, [])
-  /**
-   *update jobs on save
-   */
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(savedJobs))
-  }, [savedJobs])
-
-  /**
- *
- * functions to query api
- */
-
   function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
     let { query, locationName, distanceFrom, minimumSalary } = data;
     const locationQuery = locationName ? `&locationName=${locationName}` : `&locationName=london`;
@@ -119,91 +137,90 @@ function App() {
     setSearchQuery(query + locationQuery + distanceQuery + salaryQuery);
   }
 
+  /**
+   * When fetch job details. Check if it's cached first.
+   */
   async function getJob(jobId: number) {
-    console.log('Checking if is saved...')
     const jobCached = jobExists(jobId, savedJobs);
     if (jobCached) {
       setjobDetails(jobCached)
-      console.log('Fetched Existing', jobCached)
     }
     else {
       setloading(true);
-      console.log('Fetching new job details');
       const newJob: Job = await getData(jobId, null)
       setjobDetails(newJob)
       setloading(false);
     }
   }
 
-  /*job saved from memory rather than refetched*/
-  async function saveJob(job: Job) {
-    if (!jobExists(job.jobId, savedJobs)) {
-      const newJob: Job = await getData(job.jobId, null);
-      newJob.saved = true;
-      setSavedJobs(savedJobs => [...savedJobs, newJob]);
-    }
-  }
-
   /*************************************
-   *
    * Function Utilities for handling
    * saved job data and state
    *************************************/
+  /**
+   *  This function changes the saved property, and updated the job search list
+   */
+  function updateJobInList(jobId: number) {
+    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
+    if (jobToUpdate !== undefined) {
+      jobToUpdate.saved = !jobToUpdate.saved;
+      setJobsList((jobsList) => [...jobsList]);
+    }
+  }
+  /**
+   * When job is saved from jobsearch list, the details are pre-fetched.
+   */
+  async function saveJob(job: Job) {
+    const savedJob: Job | undefined = jobExists(job.jobId, savedJobs);
+    if (!savedJob) {
+      const newJob: Job = await getData(job.jobId, null);
+      newJob.saved = true;
+      setSavedJobs(savedJobs => [...savedJobs, newJob]);
+      updateJobInList(job.jobId);
+    }
+  }
 
+  /**
+  * Save a job from the details page, sync with joblist. Don't add if already saved.
+  */
   function saveJobFromDetails(job: Job) {
     if (!jobExists(job.jobId, savedJobs)) setSavedJobs(savedJobs => [...savedJobs, job]);
     updateJobInList(job.jobId);
   }
 
+  /**
+  * Remove a job from saved, sync with joblist
+  */
   function removeJob(job: Job) {
     setSavedJobs(savedJobs => savedJobs.filter(sJob => sJob.jobId !== job.jobId));
     updateJobInList(job.jobId);
   }
-
+  /**
+   * Check if a job exists in a given job list
+   */
   function jobExists(jobId: number, list: any[]): Job | undefined {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
-  function updateJobInList(jobId: number) {
-    const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
-    if (jobToUpdate) jobToUpdate.saved = !jobToUpdate.saved;
-    setJobsList([...jobsList]);
-  }
-
+  if (isLoading) return (<Loading />) /*This checks for auth0 loading state*/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
       <Container maxWidth="md" className="App">
-        <Router>
-          <AppBar color="primary">
-            <Toolbar >
-              <Nav addQuery={addQuery} />
-            </Toolbar>
-          </AppBar>
-          <Switch>
-            <Route path='/' exact render={() => (<Welcome />)} />
-            <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-            <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
-            <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-          </Switch>
-          {/* <AppBar color="primary" position="fixed" style={{ top: 'auto', bottom: 0 }}>
-            <Toolbar>
-              <NavBottom />
-            </Toolbar>
-          </AppBar> */}
-        </Router>
+        <AppBar color="primary">
+          <Toolbar >
+            <Nav addQuery={addQuery} />
+          </Toolbar>
+        </AppBar>
+        <Switch>
+          <Route path='/' exact render={() => (<Welcome />)} />
+          <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+          <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+        </Switch>
       </Container>
     </ThemeProvider>
   );
 }
 
 export default App;
-
-
-
-/*Note about typescript
-Before passing props to components
-Interface/class needs to be created (not sure about difference to typescript)
-to indicate the component expects that. At the same time, when passing the prop,
-also the prop needs to be marked of that type.
-*/

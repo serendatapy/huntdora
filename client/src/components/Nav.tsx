@@ -9,6 +9,8 @@ import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, Inp
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../animations/welcome-spinner-static.svg";
 
+import AuthenticationButton from "./AuthenticationBtn";
+
 type FormData = {
   query: string;
   locationName: string;
@@ -30,7 +32,14 @@ export const Nav: React.FC<Props> = (props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
-  const { register, handleSubmit, control } = useForm<FormData>();
+  const { register, handleSubmit, control } = useForm<FormData>({
+    defaultValues: {
+      query: "",
+      locationName: "",
+      distanceFrom: 10,
+      minimumSalary: 5000
+    }
+  });
 
   const handleBackToWelcome = (): void => {
     history.push('/')
@@ -42,9 +51,7 @@ export const Nav: React.FC<Props> = (props) => {
 
   const onSubmit = (data: any): void => {
     handleCloseForm();
-    console.log('Submited: ', data);
     if (data.query || data.locationName || data.distanceFrom || data.minimumSalary) {
-      console.log('Submitting: ', data);
       props.addQuery(data);
       history.push('/job-search');
     }
@@ -68,15 +75,16 @@ export const Nav: React.FC<Props> = (props) => {
       <Grid item xs={2}>
         <Avatar src={logo} onClick={handleBackToWelcome}></Avatar>
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={8}>
         <Grid container justify="flex-start" alignItems="center" direction="row">
 
           <Textfield
+            name='mainSearch'
             onClick={handleClickOpenForm}
             inputRef={register}
-            placeholder="Search for a job in the uk..."
+            placeholder="Search jobs in the UK..."
             defaultValue=''
-            style={{ width: '80%' }}
+            style={{ width: '90%' }}
             color='secondary'
             InputProps={{
               startAdornment: (
@@ -84,6 +92,7 @@ export const Nav: React.FC<Props> = (props) => {
                   <SearchIcon fontSize='large' />
                 </IconButton>
               ),
+              readOnly: true,
             }}
           />
 
@@ -105,10 +114,10 @@ export const Nav: React.FC<Props> = (props) => {
                     name="query"
                     inputRef={register}
                     placeholder="Search for a job in the uk..."
-                    defaultValue=''
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
+
                   />
                 </ListItem>
                 <ListItem>
@@ -116,7 +125,6 @@ export const Nav: React.FC<Props> = (props) => {
                     name="locationName"
                     inputRef={register}
                     placeholder="Where"
-                    defaultValue=''
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
@@ -126,7 +134,6 @@ export const Nav: React.FC<Props> = (props) => {
                   <Controller
                     name="distanceFrom"
                     control={control}
-                    defaultValue={10}
                     marks
                     color='primary'
                     render={(props) => (
@@ -147,7 +154,6 @@ export const Nav: React.FC<Props> = (props) => {
                     name="distanceFrom"
                     inputRef={register}
                     placeholder="how far?"
-                    defaultValue=''
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">mi</InputAdornment>,
@@ -158,7 +164,6 @@ export const Nav: React.FC<Props> = (props) => {
                   <Controller
                     name="minimumSalary"
                     control={control}
-                    defaultValue={5000}
                     marks
                     color='primary'
                     render={(props) => (
@@ -179,7 +184,6 @@ export const Nav: React.FC<Props> = (props) => {
                     name="minimumSalary"
                     inputRef={register}
                     placeholder="Approximate salary"
-                    defaultValue=''
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">£</InputAdornment>,
@@ -205,6 +209,9 @@ export const Nav: React.FC<Props> = (props) => {
             </List>
           </Dialog>
         </Grid>
+      </Grid>
+      <Grid item xs={2} sm={1}>
+        <AuthenticationButton />
       </Grid>
     </Grid>
   )

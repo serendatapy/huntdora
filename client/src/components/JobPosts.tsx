@@ -15,12 +15,11 @@ interface Props {
 
 export const JobPosts: React.FC<Props> = (props) => {
 
-  console.log("We've got: ", props)
   return (
     <>
       <Grid container spacing={3}>
         {
-          props.jobs.length > 0 ? props.jobs?.map(job => (
+          props.jobs?.length > 0 ? props.jobs?.map(job => (
             <Grid item style={{ width: '100%' }} key={job.jobId}>
               <JobCard job={job} getJob={props.getJob} saveJob={props.saveJob} removeJob={props.removeJob} />
             </Grid>
