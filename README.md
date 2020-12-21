@@ -20,7 +20,6 @@ At the moment, the user can save the jobs they're interested in and apply to the
 * React JS
 * Typescript
 * Progressive Web App (PWA) & Netlify Deployment
-* [Heroku Express Server](https://github.com/serendatapy/mini-proxy)
 * Material-UI
 * Auth0 Authentication + Social Login
 #### Backend - [Huntdora Server Repository](https://github.com/serendatapy/huntdora-server)
