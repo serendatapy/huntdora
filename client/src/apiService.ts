@@ -7,7 +7,7 @@ export async function getData(jobId: number | null, searchQuery: string | null):
     await apiCall(`/search/search?keywords=${searchQuery}`);
 }
 
-export async function getFavorites(email: string, token: any): Promise<any> {
+export async function getFavorites(email: string, token: any) {
   const headers = {
     Authorization: `Bearer ${token}`,
   }
@@ -30,9 +30,9 @@ export async function updateFavorites(email: string, newFavorites: [] | Job[], t
 }
 
 /**
- * Does this need to be exportted?
+ * Does this need to be exported?
  */
-export async function apiCall(
+async function apiCall(
   path: string, headers?: any): Promise<Job | Job[]> {
 
   let jobs: Job | Job[] = [];

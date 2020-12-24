@@ -82,7 +82,7 @@ function App() {
       let { email } = user;
       const fetchFavorites = async () => {
         const token = await getAccessTokenSilently();
-        const results: any = await getFavorites(email, token);
+        const results:any = await getFavorites(email, token); //api call needs refactoring to enable proper type checking
         setSavedJobs(results);
       }
       fetchFavorites();
