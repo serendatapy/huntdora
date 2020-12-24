@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData, getFavorites, updateFavorites } from './apiService';
-import { Job } from './app-types';
+import { Job, User } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
@@ -64,12 +64,13 @@ function App() {
   const [loading, setloading] = useState<boolean>(false)
   const { isLoading, getAccessTokenSilently } = useAuth0();
   const { user } = useAuth0();
+
   /**
    *LOAD JOBS on startup if any are saved on session storage
    */
   useEffect(() => {
     const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (searchedJobsJSON != null) setJobsList(JSON.parse(searchedJobsJSON));
+    if (searchedJobsJSON !== null) setJobsList(JSON.parse(searchedJobsJSON));
   }, [])
 
   /**
@@ -77,7 +78,7 @@ function App() {
    * is logged in.
    * */
   useEffect(() => {
-    if (user) {
+    if (user && User.isUser(user)) {
       let { email } = user;
       const fetchFavorites = async () => {
         const token = await getAccessTokenSilently();
@@ -93,7 +94,7 @@ function App() {
    *Whenever a job is saved/removed, update DB
    */
   useEffect(() => {
-    if (user) {
+    if (user && User.isUser(user)) {
       let { email } = user;
       const changeFavorites = async () => {
         const token = await getAccessTokenSilently();

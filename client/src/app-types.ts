@@ -33,6 +33,14 @@ export class Job {
   }
 }
 
+export class User {
+  email!: string;
+
+  static isUser(user: any): user is User {
+    return "email" in user;
+  }
+}
+
 /**
  * This interface will need to be implemented in case one starts fetching and storing
  * only the detailed job listing.
