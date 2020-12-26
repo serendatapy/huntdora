@@ -6,6 +6,8 @@ import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import { Checkbox, Grid, Typography } from '@material-ui/core';
 import { NavBottomApply } from './NavBottomApply';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   job: Job;
@@ -16,11 +18,16 @@ interface Props {
 export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob }) => {
 
   const [saved, setsaved] = useState<boolean>(job.saved)
+  const { user } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+  let history = useHistory();
 
   const handleAddRemove = (): void => {
-    job.saved ? removeJob(job) : saveJobFromDetails(job);
-    job.saved = !job.saved;
-    setsaved((saved: boolean) => !saved);
+    if (user) {
+      job.saved ? removeJob(job) : saveJobFromDetails(job);
+      job.saved = !job.saved;
+      setsaved((saved: boolean) => !saved);
+    } else loginWithRedirect()
   }
   /**
    * Long job description returns
@@ -33,18 +40,17 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
   function handleApply() {
     let url: string | null = job?.externalUrl || job?.jobUrl;
     try {
-      if (url === null) throw new Error('invalid url');
-      window.open(url);
+      if (url !== null) window.open(url);
     } catch (e) {
       console.log(e);
     }
   }
 
-  function salary() {
-    if(job.minimumSalary) return `Salary: £${job?.minimumSalary}-${job?.maximumSalary} ${job.salaryType}`
+  function renderSalary() {
+    if (job.minimumSalary) return `Salary: £${job?.minimumSalary}-${job?.maximumSalary} ${job.salaryType}`
     else return `Salary: Negotiable`
   }
-
+  if(!job.jobId) history.push("/job-search")
   return (
     <>
       <Grid container direction={"column"}>
@@ -53,14 +59,14 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
             <Typography variant={'h4'} component="div">
               {job?.jobTitle}
             </Typography>
-            <Typography component="div" style={{padding:'10px 0 0 0'}}>
+            <Typography component="div" style={{ padding: '10px 0 0 0' }}>
               {`Company: ${job?.employerName}`}
             </Typography>
             <Typography component="div" >
               {`Location: ${job?.locationName}`}
             </Typography>
             <Typography component="div" >
-              {salary()}
+              {renderSalary()}
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -80,7 +86,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
           </Typography>
         </Grid>
       </Grid>
-      <NavBottomApply handleApply={handleApply}/>
+      <NavBottomApply handleApply={handleApply} />
     </>
   )
 }
