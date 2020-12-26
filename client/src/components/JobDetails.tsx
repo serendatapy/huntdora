@@ -40,8 +40,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
   function handleApply() {
     let url: string | null = job?.externalUrl || job?.jobUrl;
     try {
-      if (url === null) throw new Error('invalid url');
-      window.open(url);
+      if (url !== null) window.open(url);
     } catch (e) {
       console.log(e);
     }

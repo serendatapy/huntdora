@@ -18,7 +18,6 @@ export async function getFavorites(email: string, token: any) {
     Authorization: `Bearer ${token}`,
   }
   const jobs =  await apiCall(`/favorites/${email}`, headers);
-  console.log('FAVORITES OBTAINED:',jobs)
   if(Job.isJobArray(jobs)) return jobs;
   else return [] as Job[]
 }
@@ -48,7 +47,6 @@ async function apiCall(
   let jobs: Job | Job[] = [];
   try {
     const { data } = headers ? await reedAPI.get(path, { headers: headers }) : await reedAPI.get(path);
-    console.log('DATA RECEIVED:',data)
     if (data.results) {
       jobs = data.results.map((job: any) => Job.parse(job))
     } else if (Array.isArray(data)) {
