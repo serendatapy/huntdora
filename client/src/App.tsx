@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getData, getFavorites, updateFavorites } from './apiService';
+import { getData, getFavorites, updateFavorites, getDataOne } from './apiService';
 import { Job, User } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
@@ -57,11 +57,11 @@ const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
 
 function App() {
 
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [jobsList, setJobsList] = useState<Job[] | []>([]);
-  const [jobDetails, setjobDetails] = useState<Job>(Job.parse({}));
-  const [savedJobs, setSavedJobs] = useState<Job[] | []>([]);
-  const [loading, setloading] = useState<boolean>(false)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [jobsList, setJobsList] = useState([] as Job[]);
+  const [jobDetails, setjobDetails] = useState(Job.parse({}));
+  const [savedJobs, setSavedJobs] = useState([] as Job[]);
+  const [loading, setloading] = useState(false)
   const { isLoading, getAccessTokenSilently } = useAuth0();
   const { user } = useAuth0();
 
@@ -82,7 +82,7 @@ function App() {
       let { email } = user;
       const fetchFavorites = async () => {
         const token = await getAccessTokenSilently();
-        const results:any = await getFavorites(email, token); //api call needs refactoring to enable proper type checking
+        const results = await getFavorites(email, token); //api call needs refactoring to enable proper type checking
         setSavedJobs(results);
       }
       fetchFavorites();
@@ -99,7 +99,7 @@ function App() {
       const changeFavorites = async () => {
         const token = await getAccessTokenSilently();
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const results: any = await updateFavorites(email, savedJobs, token);
+        const results = await updateFavorites(email, savedJobs, token);
       }
       changeFavorites();
     }
@@ -119,7 +119,7 @@ function App() {
   useEffect(() => {
     if (searchQuery !== '') {
       const fetchJobs = async () => {
-        const results: any = await getData(null, searchQuery);
+        const results = await getData(searchQuery);
         results.forEach((job: Job) => {
           if (jobExists(job.jobId, savedJobs)) job.saved = !job.saved
         })
@@ -147,12 +147,12 @@ function App() {
    */
   async function getJob(jobId: number) {
     const jobCached = jobExists(jobId, savedJobs);
-    if (jobCached) {
+    if (jobCached !== undefined) {
       setjobDetails(jobCached)
     }
     else {
       setloading(true);
-      const newJob: Job = await getData(jobId, null)
+      const newJob = await getDataOne(jobId)
       setjobDetails(newJob)
       setloading(false);
     }
@@ -178,7 +178,7 @@ function App() {
   async function saveJob(job: Job) {
     const savedJob: Job | undefined = jobExists(job.jobId, savedJobs);
     if (!savedJob) {
-      const newJob: Job = await getData(job.jobId, null);
+      const newJob = await getDataOne(job.jobId);
       newJob.saved = true;
       setSavedJobs(savedJobs => [...savedJobs, newJob]);
       updateJobInList(job.jobId);
@@ -203,7 +203,7 @@ function App() {
   /**
    * Check if a job exists in a given job list
    */
-  function jobExists(jobId: number, list: any[]): Job | undefined {
+  function jobExists(jobId: number, list: Job[]): Job | undefined {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
