@@ -112,12 +112,13 @@ export const Nav: React.FC<Props> = ({ addQuery }) => {
                 <ListItem>
                   <Textfield
                     name="locationName"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^([^0-9]*)$/ })}
                     placeholder="Where"
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
                   />
+                  {errors.locationName && "Numbers not allowed"}
                 </ListItem>
                 <ListItem>
                   <Controller
@@ -141,13 +142,14 @@ export const Nav: React.FC<Props> = ({ addQuery }) => {
                   />
                   <Textfield
                     name="distanceFrom"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^[0-9]*$/ })}
                     placeholder="how far?"
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">mi</InputAdornment>,
                     }}
                   />
+                  {errors.distanceFrom && "Only numbers allowed"}
                 </ListItem>
                 <ListItem>
                   <Controller
@@ -171,14 +173,14 @@ export const Nav: React.FC<Props> = ({ addQuery }) => {
                   />
                   <Textfield
                     name="minimumSalary"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^[0-9]*$/ })}
                     placeholder="Approximate salary"
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">£</InputAdornment>,
                     }}
                   />
-
+                  {errors.minimumSalary && "Only numbers allowed"}
                 </ListItem>
                 <DialogActions>
                   <Button
