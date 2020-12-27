@@ -13,15 +13,15 @@ interface Props {
   removeJob: (job: Job) => void;
 }
 
-export const JobPosts: React.FC<Props> = (props) => {
+export const JobPosts: React.FC<Props> = ({ jobs, getJob, saveJob, removeJob }: Props) => {
 
   return (
     <>
       <Grid container spacing={3}>
         {
-          props.jobs?.length > 0 ? props.jobs?.map(job => (
+          jobs?.length > 0 ? jobs?.map(job => (
             <Grid item style={{ width: '100%' }} key={job.jobId}>
-              <JobCard job={job} getJob={props.getJob} saveJob={props.saveJob} removeJob={props.removeJob} />
+              <JobCard job={job} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />
             </Grid>
           )) : <EmptyList />
         }
