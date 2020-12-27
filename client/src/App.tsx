@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData, getFavorites, updateFavorites } from './apiService';
-import { Job } from './app-types';
+import { Job, FormData } from './app-types';
 import { Nav } from './components/Nav';
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
@@ -132,7 +132,7 @@ function App() {
   /**
    * Data from form is composed into a query for the API
    */
-  function addQuery(data: { query: string, locationName: string, distanceFrom: number | '', minimumSalary: number | '' }) {
+  function addQuery(data: FormData) {
     let { query, locationName, distanceFrom, minimumSalary } = data;
     const locationQuery = locationName ? `&locationName=${locationName}` : `&locationName=london`;
     const distanceQuery = distanceFrom ? `&distanceFromLocation=${distanceFrom}` : `&distanceFromLocation=10`;

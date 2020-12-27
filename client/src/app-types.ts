@@ -33,6 +33,13 @@ export class Job {
   }
 }
 
+export interface FormData {
+  query: string;
+  locationName: string;
+  distanceFrom: number | '';
+  minimumSalary: number | '';
+}
+
 /**
  * This interface will need to be implemented in case one starts fetching and storing
  * only the detailed job listing.
