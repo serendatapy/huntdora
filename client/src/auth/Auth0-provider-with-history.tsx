@@ -7,6 +7,11 @@ interface Props {
 }
 
 const Auth0ProviderWithHistory: React.FC<Props> = ({ children }) => {
+
+  /**
+   * Environment variables return string | undefined
+   * add a check to make sure string are provided else throw an error.
+   */
   const domain: any = process.env.REACT_APP_AUTH0_DOMAIN;
   const clientId: any = process.env.REACT_APP_AUTH0_CLIENT_ID;
   const audience: any = process.env.REACT_APP_AUTH0_AUDIENCE;
@@ -14,7 +19,6 @@ const Auth0ProviderWithHistory: React.FC<Props> = ({ children }) => {
   const history = useHistory();
 
   const onRedirectCallback = (appState: any) => {
-    console.log('TAKING USERS BACK TO:', appState, window.location.pathname)
     history.push(appState?.targetUrl || window.location.pathname);
   };
 
