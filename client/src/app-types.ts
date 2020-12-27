@@ -12,14 +12,23 @@ export class Job {
   jobDescription!: string;
   applications!: number;
   externalUrl!: string | null;
-  jobUrl!: string|null;
-  saved:boolean = false;
-  salaryType?: string|null;
+  jobUrl!: string | null;
+  saved: boolean = false;
+  salaryType?: string | null;
 
   static parse(data: {}): Job {
     const job: Job = Object.assign(new Job(), data);
     return job;
   }
+
+  static isJobArray(job: Job | Job[]): job is Job[] {
+    return (job as Job[]).length !== undefined;
+  }
+
+  static isJob(job: Job | Job[]): job is Job {
+    return "jobId" in job;
+  }
+
   /**
    * this function is necessary because short job listings don't provide type of pay
    * as long job listings do, so one needs to infer from the quantity the frequency
@@ -38,6 +47,14 @@ export interface FormData {
   locationName: string;
   distanceFrom: number | '';
   minimumSalary: number | '';
+}
+
+export class User {
+  email!: string;
+
+  static isUser(user: any): user is User {
+    return "email" in user;
+  }
 }
 
 /**
