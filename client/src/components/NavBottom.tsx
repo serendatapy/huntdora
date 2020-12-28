@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import AppBar from '@material-ui/core/AppBar/AppBar';
 
 
-export const NavBottom: React.FC = () => {
+export const NavBottom = () => {
 
   let history = useHistory();
 

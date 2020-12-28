@@ -15,7 +15,7 @@ interface Props {
   removeJob: (job: Job) => void;
 }
 
-export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob }) => {
+export const JobDetails = ({ job, saveJobFromDetails, removeJob }: Props) => {
 
   const [saved, setsaved] = useState<boolean>(job.saved)
   const { user } = useAuth0();

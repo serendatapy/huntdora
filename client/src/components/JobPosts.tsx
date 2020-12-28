@@ -13,7 +13,7 @@ interface Props {
   removeJob: (job: Job) => void;
 }
 
-export const JobPosts: React.FC<Props> = ({ jobs, getJob, saveJob, removeJob }: Props) => {
+export const JobPosts = ({ jobs, getJob, saveJob, removeJob }: Props) => {
 
   return (
     <>

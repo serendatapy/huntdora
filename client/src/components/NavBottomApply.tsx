@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const NavBottomApply: React.FC<Props> = ({handleApply}) => {
+export const NavBottomApply = ({handleApply}: Props) => {
 
   let history = useHistory();
   const classes = useStyles();

@@ -17,7 +17,7 @@ interface Props {
   addQuery: (data: FormData) => void;
 }
 
-export const Nav: React.FC<Props> = ({ addQuery }) => {
+export const Nav = ({ addQuery }: Props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
