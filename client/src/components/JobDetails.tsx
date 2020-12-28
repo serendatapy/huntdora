@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import { Checkbox, Grid, Typography } from '@material-ui/core';
-import { NavBottomApply } from './NavBottomApply';
+import { NavBottom } from './NavBottom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory } from 'react-router-dom';
 
@@ -86,7 +86,7 @@ export const JobDetails = ({ job, saveJobFromDetails, removeJob }: Props) => {
           </Typography>
         </Grid>
       </Grid>
-      <NavBottomApply handleApply={handleApply} />
+      <NavBottom handleApply={handleApply} />
     </>
   )
 }

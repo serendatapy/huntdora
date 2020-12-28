@@ -14,7 +14,7 @@ export const Welcome = () => {
       loop: true,
       autoplay: true,
     });
-    return (): void => {
+    return () => {
       welcome.destroy();
     }
   }, []);
