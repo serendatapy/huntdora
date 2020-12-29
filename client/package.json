@@ -25,6 +25,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-testing-library": "^3.10.1",
     "html-react-parser": "^0.14.1",
+    "jest-canvas-mock": "^2.3.0",
     "lottie-web": "^5.7.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
