@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';
 import { Checkbox, Grid, Typography } from '@material-ui/core';
-import { NavBottomApply } from './NavBottomApply';
+import { NavBottom } from './NavBottom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useHistory } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ interface Props {
   removeJob: (job: Job) => void;
 }
 
-export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob }) => {
+export const JobDetails = ({ job, saveJobFromDetails, removeJob }: Props) => {
 
   const [saved, setsaved] = useState<boolean>(job.saved)
   const { user } = useAuth0();
@@ -86,7 +86,7 @@ export const JobDetails: React.FC<Props> = ({ job, saveJobFromDetails, removeJob
           </Typography>
         </Grid>
       </Grid>
-      <NavBottomApply handleApply={handleApply} />
+      <NavBottom handleApply={handleApply} />
     </>
   )
 }

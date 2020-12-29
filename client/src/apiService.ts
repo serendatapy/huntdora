@@ -3,13 +3,13 @@ import { Job } from './app-types';
 
 export async function getData(searchQuery: string | null) {
   let jobs = await apiCall(`/search/search?keywords=${searchQuery}`);
-  if(Job.isJobArray(jobs)) return jobs;
+  if (Job.isJobArray(jobs)) return jobs;
   else return [] as Job[]
 }
 
 export async function getDataOne(jobId: number | null) {
   let job = await apiCall(`/jobs/${jobId}`);
-  if(Job.isJob(job)) return job;
+  if (Job.isJob(job)) return job;
   else return Job.parse({}) as Job;
 }
 
@@ -17,8 +17,8 @@ export async function getFavorites(email: string, token: any) {
   const headers = {
     Authorization: `Bearer ${token}`,
   }
-  const jobs =  await apiCall(`/favorites/${email}`, headers);
-  if(Job.isJobArray(jobs)) return jobs;
+  const jobs = await apiCall(`/favorites/${email}`, headers);
+  if (Job.isJobArray(jobs)) return jobs;
   else return [] as Job[]
 }
 
@@ -42,11 +42,14 @@ export async function updateFavorites(email: string, newFavorites: [] | Job[], t
  * Does this need to be exported?
  */
 async function apiCall(
-  path: string, headers?: any): Promise<Job | Job[]> {
+  path: string,
+  headers?: {} | undefined
+):
+  Promise<Job | Job[]> {
 
   let jobs: Job | Job[] = [];
   try {
-    const { data } = headers ? await reedAPI.get(path, { headers: headers }) : await reedAPI.get(path);
+    const { data } = headers !== undefined ? await reedAPI.get(path, { headers: headers }) : await reedAPI.get(path);
     if (data.results) {
       jobs = data.results.map((job: any) => Job.parse(job))
     } else if (Array.isArray(data)) {

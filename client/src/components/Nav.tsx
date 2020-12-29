@@ -8,31 +8,20 @@ import Grid from '@material-ui/core/Grid';
 import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../animations/welcome-spinner-static.svg";
-
+import { FormData } from '../app-types';
 import AuthenticationButton from "./AuthenticationBtn";
 
-type FormData = {
-  query: string;
-  locationName: string;
-  distanceFrom: number | '';
-  minimumSalary: number | '';
-}
+
 
 interface Props {
-  addQuery: (data:
-    {
-      query: string;
-      locationName: string;
-      distanceFrom: number | "";
-      minimumSalary: number | "";
-    }) => void;
+  addQuery: (data: FormData) => void;
 }
 
-export const Nav: React.FC<Props> = (props) => {
+export const Nav = ({ addQuery }: Props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
-  const { register, handleSubmit, control } = useForm<FormData>({
+  const { register, handleSubmit, control, errors } = useForm<FormData>({
     defaultValues: {
       query: "",
       locationName: "",
@@ -49,10 +38,10 @@ export const Nav: React.FC<Props> = (props) => {
    * Form utility functions
    ************************/
 
-  const onSubmit = (data: any): void => {
+  const onSubmit = (data: FormData): void => {
     handleCloseForm();
-    if (data.query || data.locationName || data.distanceFrom || data.minimumSalary) {
-      props.addQuery(data);
+    if (data.query || data.locationName || data.minimumSalary) {
+      addQuery(data);
       history.push('/job-search');
     }
   }
@@ -112,23 +101,24 @@ export const Nav: React.FC<Props> = (props) => {
                 <ListItem>
                   <Textfield
                     name="query"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^([^0-9]*)$/ })}
                     placeholder="Search for a job in the uk..."
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
-
                   />
+                  {errors.query && "Numbers not allowed"}
                 </ListItem>
                 <ListItem>
                   <Textfield
                     name="locationName"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^([^0-9]*)$/ })}
                     placeholder="Where"
                     style={{ width: '80%' }}
                     color='secondary'
                     variant='outlined'
                   />
+                  {errors.locationName && "Numbers not allowed"}
                 </ListItem>
                 <ListItem>
                   <Controller
@@ -152,13 +142,14 @@ export const Nav: React.FC<Props> = (props) => {
                   />
                   <Textfield
                     name="distanceFrom"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^[0-9]*$/ })}
                     placeholder="how far?"
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">mi</InputAdornment>,
                     }}
                   />
+                  {errors.distanceFrom && "Only numbers allowed"}
                 </ListItem>
                 <ListItem>
                   <Controller
@@ -182,14 +173,14 @@ export const Nav: React.FC<Props> = (props) => {
                   />
                   <Textfield
                     name="minimumSalary"
-                    inputRef={register}
+                    inputRef={register({ pattern: /^[0-9]*$/ })}
                     placeholder="Approximate salary"
                     color='secondary'
                     InputProps={{
                       startAdornment: <InputAdornment position="start">£</InputAdornment>,
                     }}
                   />
-
+                  {errors.minimumSalary && "Only numbers allowed"}
                 </ListItem>
                 <DialogActions>
                   <Button

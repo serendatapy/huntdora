@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   }
 });
 
-export const JobCard: React.FC<Props> = ({ job, getJob, saveJob, removeJob }) => {
+export const JobCard = ({ job, getJob, saveJob, removeJob }: Props) => {
   const [saved, setsaved] = useState<boolean>(job.saved)
   const [raised, setraised] = useState({ raised: false, shadow: 5 })
 
