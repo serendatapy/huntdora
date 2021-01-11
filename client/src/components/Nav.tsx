@@ -21,6 +21,8 @@ export const Nav = ({ addQuery }: Props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
+  const [displayQuery, setDisplayQuery] = React.useState<string>('');
+
   const { register, handleSubmit, control, errors } = useForm<FormData>({
     defaultValues: {
       query: "",
@@ -41,6 +43,7 @@ export const Nav = ({ addQuery }: Props) => {
   const onSubmit = (data: FormData): void => {
     handleCloseForm();
     if (data.query || data.locationName || data.minimumSalary) {
+      setDisplayQuery(data.query)
       addQuery(data);
       history.push('/job-search');
     }
@@ -72,7 +75,7 @@ export const Nav = ({ addQuery }: Props) => {
             onClick={handleClickOpenForm}
             inputRef={register}
             placeholder="Search jobs in the UK..."
-            defaultValue=''
+            value={displayQuery}
             style={{ width: '90%' }}
             color='secondary'
             InputProps={{
