@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import Textfield from '@material-ui/core/TextField';
@@ -17,24 +17,32 @@ interface Props {
   addQuery: (data: FormData) => void;
 }
 
+const SESSION_STORAGE_KEY = 'huntdora.savedSearch';
+const lastSearchJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+let defaultValues: FormData = lastSearchJSON !== null? JSON.parse(lastSearchJSON) : { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
+
 export const Nav = ({ addQuery }: Props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
   const [displayQuery, setDisplayQuery] = React.useState<string>('');
+  const [lastSearch, setLastSearch] = React.useState<FormData>(defaultValues);
 
-  const { register, handleSubmit, control, errors } = useForm<FormData>({
-    defaultValues: {
-      query: "",
-      locationName: "",
-      distanceFrom: 10,
-      minimumSalary: 5000
-    }
+  const { register, handleSubmit, control, errors, reset } = useForm<FormData>({
+    defaultValues: {...lastSearch}
   });
 
   const handleBackToWelcome = (): void => {
     history.push('/')
   }
+  //remember last search and update form's default values with last search's value
+  useEffect(() => {
+    reset(lastSearch);
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(lastSearch))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearch])
+
+
 
   /************************
    * Form utility functions
@@ -43,6 +51,7 @@ export const Nav = ({ addQuery }: Props) => {
   const onSubmit = (data: FormData): void => {
     handleCloseForm();
     if (data.query || data.locationName || data.minimumSalary) {
+      setLastSearch(data);
       setDisplayQuery(data.query)
       addQuery(data);
       history.push('/job-search');
