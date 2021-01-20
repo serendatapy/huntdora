@@ -9,7 +9,7 @@ import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, Inp
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../assets/welcome-spinner-static.svg";
 import { FormData } from '../app-types';
-import AuthenticationButton from "./AuthenticationBtn";
+import { AuthenticationButton } from "./AuthenticationBtn";
 
 
 
@@ -19,7 +19,7 @@ interface Props {
 
 const SESSION_STORAGE_KEY = 'huntdora.savedSearch';
 const lastSearchJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-let defaultValues: FormData = lastSearchJSON !== null? JSON.parse(lastSearchJSON) : { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
+let defaultValues: FormData = lastSearchJSON !== null ? JSON.parse(lastSearchJSON) : { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
 
 export const Nav = ({ addQuery }: Props) => {
 
@@ -28,7 +28,7 @@ export const Nav = ({ addQuery }: Props) => {
   const [lastSearch, setLastSearch] = React.useState<FormData>(defaultValues);
 
   const { register, handleSubmit, control, errors, reset } = useForm<FormData>({
-    defaultValues: {...lastSearch}
+    defaultValues: { ...lastSearch }
   });
 
   const handleBackToWelcome = (): void => {
@@ -38,7 +38,7 @@ export const Nav = ({ addQuery }: Props) => {
   useEffect(() => {
     reset(lastSearch);
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(lastSearch))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastSearch])
 
 

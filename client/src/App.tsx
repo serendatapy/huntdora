@@ -75,7 +75,7 @@ function useSessionState<ItemType>(storageKey: string, initialState: ItemType): 
   return [value, setValue];
 }
 
-function App() {
+export function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
   //const [jobsList, setJobsList] = useState([] as Job[]);
@@ -248,5 +248,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;
