@@ -9,15 +9,15 @@ import AppBar from '@material-ui/core/AppBar/AppBar';
 import Button from '@material-ui/core/Button/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
-interface Props {
-  handleApply?: () => void
-}
-
 const useStyles = makeStyles({
   root: {
     background: '#f1cd8e',
   },
 });
+
+interface Props {
+  handleApply?: () => void
+}
 
 export const NavBottom = ({handleApply}: Props) => {
 

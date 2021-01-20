@@ -8,12 +8,6 @@ import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined'
 import { makeStyles } from '@material-ui/core/styles';
 import { useAuth0 } from "@auth0/auth0-react";
 
-interface Props {
-  job: Job;
-  getJob: (jobId: number) => void;
-  saveJob: (job: Job) => void;
-  removeJob: (job: Job) => void;
-}
 /**
  * Hover over card animation
  */
@@ -25,6 +19,13 @@ const useStyles = makeStyles({
     transform: "scale(1.02)"
   }
 });
+
+interface Props {
+  job: Job;
+  getJob: (jobId: number) => void;
+  saveJob: (job: Job) => void;
+  removeJob: (job: Job) => void;
+}
 
 export const JobCard = ({ job, getJob, saveJob, removeJob }: Props) => {
   const [saved, setsaved] = useState<boolean>(job.saved)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { getData, getFavorites, updateFavorites, getDataOne } from './apiService';
+import { getData, getFavorites, updateFavorites, getDataOne } from './apiServiceReed';
 import { Job, User, FormData } from './typeInterfaces';
 import { NavTop } from './components/NavTop';
 import { JobPosts } from './components/JobPosts';
@@ -12,7 +12,6 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import { useAuth0 } from "@auth0/auth0-react";
-//import ProtectedRoute from './auth/ProtectedRoute';
 
 //Global themes can be set here
 let theme = createMuiTheme({
@@ -51,13 +50,13 @@ let theme = createMuiTheme({
     },
   },
 })
+
 theme = responsiveFontSizes(theme);
 
-//const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
 /**
    * Custom hook that stores state as a variable and in the session in case of refresh
-   * for semi-persistent storage
-   */
+   * for semi-persistent storage, to be placed in it's own file
+*/
 function useSessionState<ItemType>(storageKey: string, initialState: ItemType): [ItemType, React.Dispatch<React.SetStateAction<ItemType>>] {
 
   const jsonValue = sessionStorage.getItem(storageKey);
@@ -78,21 +77,12 @@ function useSessionState<ItemType>(storageKey: string, initialState: ItemType): 
 export function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
-  //const [jobsList, setJobsList] = useState([] as Job[]);
   const [jobsList, setJobsList] = useSessionState('huntdora.savedJobs', [] as Job[]);
   const [jobDetails, setjobDetails] = useState(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState([] as Job[]);
   const [loading, setloading] = useState(false)
   const { isLoading, getAccessTokenSilently } = useAuth0();
   const { user } = useAuth0();
-
-  // /**
-  //  *LOAD JOBS on startup if any are saved on session storage
-  //  */
-  // useEffect(() => {
-  //   const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-  //   if (searchedJobsJSON !== null) setJobsList(JSON.parse(searchedJobsJSON));
-  // }, [])
 
   /**
    * When there is a user, or user changes, fetch their favorites if user
@@ -103,7 +93,7 @@ export function App() {
       let { email } = user;
       const fetchFavorites = async () => {
         const token = await getAccessTokenSilently();
-        const results = await getFavorites(email, token); //api call needs refactoring to enable proper type checking
+        const results = await getFavorites(email, token);
         setSavedJobs(results);
       }
       fetchFavorites();
@@ -126,13 +116,6 @@ export function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedJobs]);
-
-  /**
-   * Save any fetched jobs to session storage - prevent loss after refresh
-   */
-  // useEffect(() => {
-  //   sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
-  // }, [jobsList])
 
   /**
    * Search - Whenever query is changed, fetch jobs
@@ -184,7 +167,7 @@ export function App() {
    * saved job data and state
    *************************************/
   /**
-   *  This function changes the saved property, and updated the job search list
+   *  This function changes the saved property, and updates the job search list
    */
   function updateJobInList(jobId: number) {
     const jobToUpdate: Job | undefined = jobExists(jobId, jobsList);
@@ -194,7 +177,8 @@ export function App() {
     }
   }
   /**
-   * When job is saved from jobsearch list, the details are pre-fetched.
+   * When job is saved from jobsearch list, the details are pre-fetched
+   * for later viewing in job details.
    */
   async function saveJob(job: Job) {
     const savedJob: Job | undefined = jobExists(job.jobId, savedJobs);
@@ -229,6 +213,7 @@ export function App() {
   }
 
   if (isLoading) return (<ScreenLoading />) /*This checks for auth0 loading state*/
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}

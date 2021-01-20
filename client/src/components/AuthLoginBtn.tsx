@@ -3,7 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-
+/**
+ * Login should redirect back to the page user was on
+ */
 export const AuthLoginBtn = () => {
 
   const { loginWithRedirect } = useAuth0();

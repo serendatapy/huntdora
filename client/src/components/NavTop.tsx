@@ -13,14 +13,19 @@ import { AuthBtn } from "./AuthBtn";
 
 
 
-interface Props {
-  addQuery: (data: FormData) => void;
-}
 
+/**
+ * If a search has been made during thiss session
+ * load that search as default values
+ */
 const SESSION_STORAGE_KEY = 'huntdora.savedSearch';
 const lastSearchJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
 let defaultValues: FormData = lastSearchJSON !== null ? JSON.parse(lastSearchJSON) :
   { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
+
+interface Props {
+  addQuery: (data: FormData) => void;
+}
 
 export const NavTop = ({ addQuery }: Props) => {
 
@@ -38,6 +43,7 @@ export const NavTop = ({ addQuery }: Props) => {
 
   /**
    * Remember last search and update form's default values with last search's value
+   * on form load
    */
   useEffect(() => {
     reset(lastSearch);
@@ -68,6 +74,9 @@ export const NavTop = ({ addQuery }: Props) => {
     setOpen(false);
   };
 
+  /**
+   *To Finish implementing label
+   */
   function valuetext(value: number): string {
     return `${value}miles`;
   }

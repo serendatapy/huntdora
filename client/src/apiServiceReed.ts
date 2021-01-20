@@ -22,8 +22,9 @@ export async function getFavorites(email: string, token: any) {
   else return [] as Job[]
 }
 
-
-/*UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)*/
+/**
+ * UPDATE FAVORITES (Allow for changes to take place, whenever a star is pressed)
+ */
 export async function updateFavorites(email: string, newFavorites: [] | Job[], token: any): Promise<any> {
 
   const headers = {
@@ -38,16 +39,13 @@ export async function updateFavorites(email: string, newFavorites: [] | Job[], t
   }
 }
 
-/**
- * Does this need to be exported?
- */
 async function apiCall(
   path: string,
   headers?: {} | undefined
 ):
   Promise<Job | Job[]> {
-
   let jobs: Job | Job[] = [];
+
   try {
     const { data } = headers !== undefined ? await reedAPI.get(path, { headers: headers }) : await reedAPI.get(path);
     if (data.results) {
@@ -61,6 +59,7 @@ async function apiCall(
   } catch (error) {
     return jobs;
   }
+
 }
 
 

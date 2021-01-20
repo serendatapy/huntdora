@@ -29,13 +29,6 @@ export const JobDetails = ({ job, saveJobFromDetails, removeJob }: Props) => {
       setsaved((saved: boolean) => !saved);
     } else loginWithRedirect()
   }
-  /**
-   * Long job description returns
-   * a string of HTML
-   */
-  function parseJobDesc(): JSX.Element | JSX.Element[] | undefined {
-    if (job.jobDescription) return parse(job.jobDescription)
-  }
 
   function handleApply() {
     let url: string | null = job?.externalUrl || job?.jobUrl;
@@ -44,6 +37,14 @@ export const JobDetails = ({ job, saveJobFromDetails, removeJob }: Props) => {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  /**
+   * Long job description returns
+   * a string of HTML that needs parsing
+   */
+  function parseJobDesc(): JSX.Element | JSX.Element[] | undefined {
+    if (job.jobDescription) return parse(job.jobDescription)
   }
 
   function renderSalary() {

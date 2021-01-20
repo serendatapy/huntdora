@@ -22,7 +22,7 @@ export const ScreenEmptyList = () => {
     }
   }, []);
 
-  function emptyMessage() {
+  function loadEmptyMessage() {
     if(location.pathname === '/job-search'){
       return <div>No Results. <br/>Search for Jobs!</div>
     } else if(location.pathname === '/saved-jobs') {
@@ -36,7 +36,7 @@ export const ScreenEmptyList = () => {
       <Grid item>
         <div id="puzzle-animation" style={{ width: 200, height: 200 }} />
         <Typography align="center" variant="h6">
-          {emptyMessage()}
+          {loadEmptyMessage()}
         </Typography>
       </Grid>
     </Grid>

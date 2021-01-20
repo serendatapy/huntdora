@@ -3,7 +3,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 
-
+/**
+ * Logout should redirect user back to welcome screen
+ */
 export const AuthLogoutBtn = () => {
 
   const { logout } = useAuth0();
