@@ -7,7 +7,7 @@ import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
 import { Loading } from './components/Loading';
 import { Welcome } from './components/Welcome';
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
 import { ThemeProvider, createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
@@ -53,25 +53,46 @@ let theme = createMuiTheme({
 })
 theme = responsiveFontSizes(theme);
 
-const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
+//const SESSION_STORAGE_KEY = 'huntdora.savedJobs';
+/**
+   * Custom hook that stores state as a variable and in the session in case of refresh
+   * for semi-persistent storage
+   */
+function useSessionState<ItemType>(storageKey: string, initialState: ItemType): [ItemType, React.Dispatch<React.SetStateAction<ItemType>>] {
+
+  const jsonValue = sessionStorage.getItem(storageKey);
+  const startState = jsonValue !== null? JSON.parse(jsonValue) as ItemType : initialState
+
+  const [value, setValue] = React.useState(startState)
+
+
+  React.useEffect(() => {
+    const stringifiedValue = JSON.stringify(value);
+    sessionStorage.setItem(storageKey, stringifiedValue);
+  }, [value, storageKey]
+  )
+
+  return [value, setValue];
+}
 
 function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [jobsList, setJobsList] = useState([] as Job[]);
+  //const [jobsList, setJobsList] = useState([] as Job[]);
+  const [jobsList, setJobsList] = useSessionState('huntdora.savedJobs', [] as Job[]);
   const [jobDetails, setjobDetails] = useState(Job.parse({}));
   const [savedJobs, setSavedJobs] = useState([] as Job[]);
   const [loading, setloading] = useState(false)
   const { isLoading, getAccessTokenSilently } = useAuth0();
   const { user } = useAuth0();
 
-  /**
-   *LOAD JOBS on startup if any are saved on session storage
-   */
-  useEffect(() => {
-    const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-    if (searchedJobsJSON !== null) setJobsList(JSON.parse(searchedJobsJSON));
-  }, [])
+  // /**
+  //  *LOAD JOBS on startup if any are saved on session storage
+  //  */
+  // useEffect(() => {
+  //   const searchedJobsJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
+  //   if (searchedJobsJSON !== null) setJobsList(JSON.parse(searchedJobsJSON));
+  // }, [])
 
   /**
    * When there is a user, or user changes, fetch their favorites if user
@@ -87,7 +108,7 @@ function App() {
       }
       fetchFavorites();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   /**
@@ -103,15 +124,15 @@ function App() {
       }
       changeFavorites();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedJobs]);
 
   /**
    * Save any fetched jobs to session storage - prevent loss after refresh
    */
-  useEffect(() => {
-    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
-  }, [jobsList])
+  // useEffect(() => {
+  //   sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(jobsList))
+  // }, [jobsList])
 
   /**
    * Search - Whenever query is changed, fetch jobs
