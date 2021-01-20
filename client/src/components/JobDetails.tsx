@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Job } from '../app-types';
+import { Job } from '../typeInterfaces';
 import parse from 'html-react-parser';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import LocalActivityOutlinedIcon from '@material-ui/icons/LocalActivityOutlined';

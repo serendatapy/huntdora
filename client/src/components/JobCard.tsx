@@ -1,5 +1,5 @@
 import React from 'react'
-import { Job } from '../app-types'
+import { Job } from '../typeInterfaces'
 import { useHistory } from 'react-router-dom';
 import { useState } from 'react'
 import {Checkbox,Typography,Card,CardContent,Grid} from '@material-ui/core';

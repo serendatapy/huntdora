@@ -1,5 +1,5 @@
-import { reedAPI } from './apiCall';
-import { Job } from './app-types';
+import { reedAPI } from './apiProviderReed';
+import { Job } from './typeInterfaces';
 
 export async function getData(searchQuery: string | null) {
   let jobs = await apiCall(`/search/search?keywords=${searchQuery}`);

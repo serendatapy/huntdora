@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, InputAdornment } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../assets/welcome-spinner-static.svg";
-import { FormData } from '../app-types';
+import { FormData } from '../typeInterfaces';
 import { AuthenticationButton } from "./AuthBtn";
 
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData, getFavorites, updateFavorites, getDataOne } from './apiService';
-import { Job, User, FormData } from './app-types';
+import { Job, User, FormData } from './typeInterfaces';
 import { Nav } from './components/NavTop';
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
