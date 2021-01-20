@@ -4,7 +4,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 
 
-export const LogoutButton = () => {
+export const AuthLogoutBtn = () => {
 
   const { logout } = useAuth0();
   return (

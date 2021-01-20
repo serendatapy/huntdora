@@ -5,7 +5,7 @@ import { Typography, Grid } from '@material-ui/core';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useLocation } from 'react-router-dom';
 
-export const EmptyList = () => {
+export const ScreenEmptyList = () => {
   const { user } = useAuth0();
   let location = useLocation();
 

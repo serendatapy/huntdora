@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 
-export const LoginButton = () => {
+export const AuthLoginBtn = () => {
 
   const { loginWithRedirect } = useAuth0();
   return (

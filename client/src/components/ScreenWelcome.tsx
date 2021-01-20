@@ -4,7 +4,7 @@ import welcomeAnimation from "../assets/welcome-spinner.json";
 import lottie from 'lottie-web';
 import { NavBottom } from './NavBottom';
 
-export const Welcome = () => {
+export const ScreenWelcome = () => {
 
   useEffect(() => {
     let welcome = lottie.loadAnimation({

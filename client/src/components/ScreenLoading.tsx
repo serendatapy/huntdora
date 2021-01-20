@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 
-export const Loading = () => {
+export const ScreenLoading = () => {
   let location = useLocation();
 
   useEffect(() => {

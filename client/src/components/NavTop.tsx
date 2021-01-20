@@ -9,7 +9,7 @@ import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, Inp
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../assets/welcome-spinner-static.svg";
 import { FormData } from '../typeInterfaces';
-import { AuthenticationButton } from "./AuthBtn";
+import { AuthBtn } from "./AuthBtn";
 
 
 
@@ -22,7 +22,7 @@ const lastSearchJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
 let defaultValues: FormData = lastSearchJSON !== null ? JSON.parse(lastSearchJSON) :
   { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
 
-export const Nav = ({ addQuery }: Props) => {
+export const NavTop = ({ addQuery }: Props) => {
 
   let history = useHistory();
   const [open, setOpen] = React.useState<boolean>(false);
@@ -216,7 +216,7 @@ export const Nav = ({ addQuery }: Props) => {
         </Grid>
       </Grid>
       <Grid item xs={2} sm={1}>
-        <AuthenticationButton />
+        <AuthBtn />
       </Grid>
     </Grid>
   )

@@ -2,7 +2,7 @@ import React from 'react';
 import { JobCard } from './JobCard';
 import { Job } from '../typeInterfaces';
 import Grid from '@material-ui/core/Grid';
-import { EmptyList } from './ScreenEmptyList';
+import { ScreenEmptyList } from './ScreenEmptyList';
 import { NavBottom } from './NavBottom';
 
 
@@ -23,7 +23,7 @@ export const JobPosts = ({ jobs, getJob, saveJob, removeJob }: Props) => {
             <Grid item style={{ width: '100%' }} key={job.jobId}>
               <JobCard job={job} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />
             </Grid>
-          )) : <EmptyList />
+          )) : <ScreenEmptyList />
         }
       </Grid>
 

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData, getFavorites, updateFavorites, getDataOne } from './apiService';
 import { Job, User, FormData } from './typeInterfaces';
-import { Nav } from './components/NavTop';
+import { NavTop } from './components/NavTop';
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
-import { Loading } from './components/ScreenLoading';
-import { Welcome } from './components/ScreenWelcome';
+import { ScreenLoading } from './components/ScreenLoading';
+import { ScreenWelcome } from './components/ScreenWelcome';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
@@ -228,20 +228,20 @@ export function App() {
     return list.find(listJob => listJob.jobId === jobId);
   }
 
-  if (isLoading) return (<Loading />) /*This checks for auth0 loading state*/
+  if (isLoading) return (<ScreenLoading />) /*This checks for auth0 loading state*/
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/*MATERIAL UI CSS RESET*/}
       <Container maxWidth="md" className="App">
         <AppBar color="primary">
           <Toolbar >
-            <Nav addQuery={addQuery} />
+            <NavTop addQuery={addQuery} />
           </Toolbar>
         </AppBar>
         <Switch>
-          <Route path='/' exact render={() => (<Welcome />)} />
-          <Route path='/job-search' exact render={() => loading ? (<Loading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
-          <Route path='/job-details' exact render={() => loading ? (<Loading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
+          <Route path='/' exact render={() => (<ScreenWelcome />)} />
+          <Route path='/job-search' exact render={() => loading ? (<ScreenLoading />) : (<JobPosts jobs={jobsList} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
+          <Route path='/job-details' exact render={() => loading ? (<ScreenLoading />) : (<JobDetails job={jobDetails} saveJobFromDetails={saveJobFromDetails} removeJob={removeJob} />)} />
           <Route path='/saved-jobs' exact render={() => (<JobPosts jobs={savedJobs} getJob={getJob} saveJob={saveJob} removeJob={removeJob} />)} />
         </Switch>
       </Container>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { Loading } from "../components/ScreenLoading";
+import { ScreenLoading } from "../components/ScreenLoading";
 
 interface Props {
   component: any
@@ -10,7 +10,7 @@ interface Props {
 const ProtectedRoute: React.FC<Props> = ({ component, ...args }) => (
   <Route
     component={withAuthenticationRequired(component, {
-      onRedirecting: () => <Loading />,
+      onRedirecting: () => <ScreenLoading />,
     })}
     {...args}
   />
