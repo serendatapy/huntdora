@@ -2,7 +2,7 @@ import React from 'react';
 import { JobCard } from './JobCard';
 import { Job } from '../app-types';
 import Grid from '@material-ui/core/Grid';
-import { EmptyList } from './EmptyList';
+import { EmptyList } from './ScreenEmptyList';
 import { NavBottom } from './NavBottom';
 
 

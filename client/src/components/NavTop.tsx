@@ -9,7 +9,7 @@ import { Button, Dialog, DialogTitle, DialogActions, List, ListItem, Slider, Inp
 import Avatar from '@material-ui/core/Avatar/Avatar';
 import logo from "../assets/welcome-spinner-static.svg";
 import { FormData } from '../app-types';
-import { AuthenticationButton } from "./AuthenticationBtn";
+import { AuthenticationButton } from "./AuthBtn";
 
 
 
@@ -19,7 +19,8 @@ interface Props {
 
 const SESSION_STORAGE_KEY = 'huntdora.savedSearch';
 const lastSearchJSON = sessionStorage.getItem(SESSION_STORAGE_KEY);
-let defaultValues: FormData = lastSearchJSON !== null ? JSON.parse(lastSearchJSON) : { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
+let defaultValues: FormData = lastSearchJSON !== null ? JSON.parse(lastSearchJSON) :
+  { query: '', locationName: '', distanceFrom: 10, minimumSalary: 5005 };
 
 export const Nav = ({ addQuery }: Props) => {
 
@@ -34,7 +35,10 @@ export const Nav = ({ addQuery }: Props) => {
   const handleBackToWelcome = (): void => {
     history.push('/')
   }
-  //remember last search and update form's default values with last search's value
+
+  /**
+   * Remember last search and update form's default values with last search's value
+   */
   useEffect(() => {
     reset(lastSearch);
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(lastSearch))

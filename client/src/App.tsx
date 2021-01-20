@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { getData, getFavorites, updateFavorites, getDataOne } from './apiService';
 import { Job, User, FormData } from './app-types';
-import { Nav } from './components/Nav';
+import { Nav } from './components/NavTop';
 import { JobPosts } from './components/JobPosts';
 import { JobDetails } from './components/JobDetails';
-import { Loading } from './components/Loading';
-import { Welcome } from './components/Welcome';
+import { Loading } from './components/ScreenLoading';
+import { Welcome } from './components/ScreenWelcome';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { Container, CssBaseline, AppBar, Toolbar } from '@material-ui/core/';
