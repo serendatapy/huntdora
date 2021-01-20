@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import jobsNotFound from "../animations/jobs-not-found.json";
+import jobsNotFound from "../assets/jobs-not-found.json";
 import lottie from 'lottie-web';
 import { Typography, Grid } from '@material-ui/core';
 import { useAuth0 } from "@auth0/auth0-react";
